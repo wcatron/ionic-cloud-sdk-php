@@ -14,9 +14,12 @@
         <testsuite name="helpers">
             <directory>./tests/Helpers</directory>
         </testsuite>
+        <testsuite name="users">
+            <directory>./tests/Users</directory>
+        </testsuite>
     </testsuites>
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist>
             <directory suffix=".php">./src</directory>
             <exclude>
                 <directory suffix=".php">./vendor</directory>
