@@ -7,3 +7,6 @@ coverage/
 
 # IDE
 .idea/
+
+# Testing Configuration File
+tests/config.ini

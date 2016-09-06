@@ -6,7 +6,15 @@ use Ionic\Helpers\Pagination;
 use Ionic\Interfaces\Client;
 
 class TestClient implements Client {
+    /**
+     * TestClient constructor.
+     * @param $config array Can be empty for testing.
+     */
     function __construct($config) {
+
+    }
+
+    function test() {
 
     }
 
@@ -16,6 +24,13 @@ class TestClient implements Client {
      * @return array
      */
     function getUsers($page_size, $page) {
-        return [ ];
+        $users = [
+            [
+                'app_id' => 'testing',
+                'created' => '',
+                'custom' => null
+            ]
+        ];
+        return array_splice($users, $page_size * $page, $page_size);
     }
 }
