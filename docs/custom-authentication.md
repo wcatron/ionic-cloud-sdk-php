@@ -10,10 +10,10 @@
 
 3. Create an instance of the `CustomAuthentication` class with your secret and the authenticator.
 
-``` $authentication = new CustomAuthentication('foxtrot', $authenticator); ```
+ ``` $authentication = new CustomAuthentication('foxtrot', $authenticator); ```
 
 4. Finally call process passing the token, redirect URI, and state from the get request.
 
-``` $redirect = $authentication->process($_GET['token'], $_GET['redirect_uri'], $_GET['state']); ```
+ ``` $redirect = $authentication->process($_GET['token'], $_GET['redirect_uri'], $_GET['state']); ```
 
 5. Set redirect url header to the returned value.
