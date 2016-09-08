@@ -2,29 +2,30 @@
 
 namespace Ionic\Users;
 
+use GuzzleHttp\Promise\Promise;
+use Ionic\Client;
 use Ionic\Helpers\Pagination;
-use Ionic\Interfaces\Client;
 use Ionic\Users\Models\User;
 
-class UsersClient {
-    /**
-     * @var Client
-     */
-    private $client;
-    function __construct($client) {
-        $this->client = $client;
-    }
-
+class UsersClient extends Client {
     /**
      * @param $pagination Pagination
      * @return User[]
      */
-    function getUsers(&$pagination) {
-        $response = $this->client->getUsers($pagination->pageSize, $pagination->page);
-        $pagination->currentSize = count($response);
-        $pagination->page++;
-        return [];
+    function getUsers(Pagination &$pagination) {
+        $results = $this->getUsersAsync($pagination)->wait();
+        return $results;
     }
 
-
+    /**
+     * @param Pagination $pagination
+     * @return Promise
+     */
+    function getUsersAsync(Pagination &$pagination) {
+        return $this->getCommand('getUsers', ['page_size' => $pagination->pageSize, 'page' => $pagination->page])->resolve()->then(function ($results) use (&$pagination) {
+            $pagination->currentSize = count($results);
+            $pagination->currentPage++;
+            return $results;
+        });
+    }
 }

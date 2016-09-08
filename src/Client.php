@@ -6,21 +6,40 @@ use Ionic\Helpers\HttpHandler;
 
 class Client implements \Ionic\Interfaces\Client {
     private $config;
-    private $api;
+    /**
+     * @var HttpHandler
+     */
+    public $handler;
     private $api_token;
+    public $app_id;
+
     function __construct($config) {
         $this->config = $config;
         $this->api_token = $config['api_token'];
-        $this->api = new HttpHandler();
+        $this->app_id = $config['app_id'];
+        if (empty($config['http_handler'])) {
+            $this->handler = new HttpHandler(
+                [
+                    'api_token' => $this->api_token
+                ]);
+        } else {
+            $this->handler = $config['http_handler'];
+        }
     }
 
-    function test() {
-        $response = $this->api->call('GET', 'auth/test', [], $this->api_token);
-        return $response;
+    /**
+     * @param       $name
+     * @param array $args
+     * @return
+     */
+    public function getCommand($name, array $args = [ ]) {
+        return new \Ionic\Command($name, $args, $this->handler);
     }
 
-    function getUsers($page_size, $page) {
-        // TODO: Implement getUsers() method.
+    public function test() {
+        return $this->testAsync()->wait();
     }
-
+    public function testAsync() {
+        return $this->getCommand('test')->resolve();
+    }
 }

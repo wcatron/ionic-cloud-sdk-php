@@ -2,14 +2,8 @@
 
 namespace Ionic\Deploy;
 
-use Ionic\Interfaces\Client;
+use Ionic\Client;
 
-class DeployClient {
-    /**
-     * @var Client
-     */
-    private $client;
-    function __construct($client) {
-        $this->client = $client;
-    }
+class DeployClient extends Client {
+
 }

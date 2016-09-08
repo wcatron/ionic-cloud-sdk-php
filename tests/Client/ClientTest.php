@@ -1,5 +1,10 @@
 <?php
-use Ionic\Interfaces\Client;
+
+use GuzzleHttp\Psr7\Response;
+use Ionic\Client;
+use Ionic\Helpers\Pagination;
+use Ionic\Test\TestingClient;
+use Ionic\Users\UsersClient;
 
 /**
  * Created by PhpStorm.
@@ -8,26 +13,26 @@ use Ionic\Interfaces\Client;
  * Time: 6:57 PM
  */
 class ClientTest extends PHPUnit_Framework_TestCase {
-    /**
-     * @var Client
-     */
-    private $client;
-    function setUp() {
-        parent::setUp();
-        try {
-            $config = parse_ini_file(__DIR__.'/../config.ini');
-        } catch (\Exception $e) {
-            $this->markTestSkipped('Test skipped since no config was found.');
+
+    use TestingClient;
+
+    function testTest() {
+        $client = $this->getTestClientWithResponse(new Response(200, [], json_encode(file_get_contents(__DIR__.'/../responses/test.success.json'))));
+        $response = $client->test();
+        $this->assertTrue(isset($response['data']['success']));
+    }
+
+    function testTestAuth() {
+        $config = parse_ini_file(__DIR__.'/../config.ini');
+        if (empty($config) || true) {
+            $this->markTestSkipped("config.ini file not found so assuming you don't want to test real API. That's okay, it's it should only be used to determine test results.");
         }
-        $this->client = new Ionic\Client($config);
+        $client = new Client($config);
+        $response = $client->test();
+        print_r($response);
+        $userClient = new UsersClient($config);
+        $response = $userClient->getUsers(new Pagination(1,3));
+        $this->assertEquals(3, count($response));
     }
 
-    function testClientTest() {
-        print_r($this->client->test());
-    }
-
-    function testClientGetUsers() {
-        $users = $this->client->getUsers(10,0);
-        var_dump($users);
-    }
 }

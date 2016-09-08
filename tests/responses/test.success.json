@@ -1,0 +1,10 @@
+{
+    "meta": {
+        "request_id": "a7eab205-3c5d-4eb1-9fa0-8c8507d91d4a",
+        "status": "200",
+        "version": "2.0.0-beta.0"
+    },
+    "data": {
+        "success": "You have successfully made an authenticated request to the Ionic Cloud API"
+    }
+}

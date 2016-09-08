@@ -10,3 +10,6 @@ coverage/
 
 # Testing Configuration File
 tests/config.ini
+
+# Generated Docs
+docs/api/

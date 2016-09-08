@@ -2,14 +2,8 @@
 
 namespace Ionic\Package;
 
-use Ionic\Interfaces\Client;
+use Ionic\Client;
 
-class PackageClient {
-    /**
-     * @var Client
-     */
-    private $client;
-    function __construct($client) {
-        $this->client = $client;
-    }
+class PackageClient extends Client {
+
 }
