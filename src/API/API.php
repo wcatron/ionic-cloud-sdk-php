@@ -17,7 +17,7 @@ class API implements \Ionic\API\Interfaces\API {
      * API constructor.
      * @param Route[] $routes
      */
-    function __construct($routes) {
+    function __construct($routes = []) {
         $this->routes = $routes;
     }
 
