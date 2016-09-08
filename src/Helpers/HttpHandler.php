@@ -10,9 +10,11 @@ class HttpHandler extends Client {
         if (empty($config['api_token'])) {
             throw new \Exception("Must set api token.");
         }
-        $config['headers'] = [
-            "Authorization" => "Bearer ".$config['api_token']
-        ];
+        if (!isset($config['headers'])) {
+            $config['headers'] = [];
+        }
+        $config['headers']['Authorization'] = "Bearer ".$config['api_token'];
+
         parent::__construct($config);
     }
 }
