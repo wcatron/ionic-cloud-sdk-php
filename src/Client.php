@@ -2,6 +2,8 @@
 
 namespace Ionic;
 
+use Ionic\API\API;
+use Ionic\API\RouteParser;
 use Ionic\Helpers\HttpHandler;
 
 class Client implements \Ionic\Interfaces\Client {
@@ -12,6 +14,7 @@ class Client implements \Ionic\Interfaces\Client {
     public $handler;
     private $api_token;
     public $app_id;
+    public $api;
 
     function __construct($config) {
         $this->config = $config;
@@ -25,6 +28,14 @@ class Client implements \Ionic\Interfaces\Client {
         } else {
             $this->handler = $config['http_handler'];
         }
+
+        if (empty($config['route_parser'])) {
+            $config['route_parser'] = new RouteParser(["file" => __DIR__."/API/api.json"]);
+        }
+        if (empty($config['api'])) {
+            $config['api'] = new API($config['route_parser']->parse());
+        }
+        $this->api = $config['api'];
     }
 
     /**
@@ -33,7 +44,7 @@ class Client implements \Ionic\Interfaces\Client {
      * @return
      */
     public function getCommand($name, array $args = [ ]) {
-        return new \Ionic\Command($name, $args, $this->handler);
+        return new \Ionic\Command($name, $args, $this->handler, $this->api);
     }
 
     public function test() {
