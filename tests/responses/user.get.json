@@ -1,0 +1,11 @@
+{
+    "data": {
+        "app_id":"XXX",
+        "details": {
+            "name" : "Sample Name",
+            "image" : ""
+        },
+        "created": "DATE",
+        "uuid": "A"
+    }
+}

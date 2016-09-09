@@ -22,6 +22,17 @@ class ClientTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(isset($response['data']['success']));
     }
 
+    function testNonAsyncCall() {
+        $client = $this->getTestClientWithResponses([
+            new Response(200, [], json_encode(file_get_contents(__DIR__.'/../responses/test.success.json'))),
+            new Response(200, [], json_encode(file_get_contents(__DIR__.'/../responses/test.success.json')))
+        ]);
+        $response = $client->test();
+        $this->assertTrue(isset($response['data']['success']));
+        $responseAsync = $client->testAsync()->wait();
+        $this->assertTrue($response['data']['success'] == $responseAsync['data']['success']);
+    }
+
     function testTestAuth() {
         $config = parse_ini_file(__DIR__.'/../config.ini');
         if (empty($config) || true) {
