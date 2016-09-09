@@ -49,6 +49,7 @@ class UsersClientTest extends PHPUnit_Framework_TestCase {
 
     function testCreateUser() {
         // TODO: Create test create user.
+        $this->markTestSkipped('Not yet implemented.');
     }
 
     function testGetUser() {
@@ -63,6 +64,7 @@ class UsersClientTest extends PHPUnit_Framework_TestCase {
 
     function testUpdateUser() {
         // TODO: Create test update user.
+        $this->markTestSkipped('Not yet implemented.');
     }
     function testDeleteUser() {
         $response = new Response(200, [ ], file_get_contents(__DIR__ . '/../responses/user.delete.json'));
@@ -72,10 +74,12 @@ class UsersClientTest extends PHPUnit_Framework_TestCase {
     }
     function testGetCustomData() {
         // TODO: Test get custom data.
+        $this->markTestSkipped('Not yet implemented.');
     }
 
     function testUpdateCustomData() {
         // TODO: Test update custom data.
+        $this->markTestSkipped('Not yet implemented.');
     }
 
 }

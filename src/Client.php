@@ -2,8 +2,12 @@
 
 namespace Ionic;
 
+use GuzzleHttp\Promise\Promise;
 use Ionic\Helpers\HttpHandler;
 
+/**
+ * @method mixed test()
+ **/
 class Client implements \Ionic\Interfaces\Client {
     private $config;
     /**
@@ -36,10 +40,18 @@ class Client implements \Ionic\Interfaces\Client {
         return new \Ionic\Command($name, $args, $this->handler);
     }
 
-    public function test() {
-        return $this->testAsync()->wait();
-    }
+    /**
+     * @return Promise
+     */
     public function testAsync() {
         return $this->getCommand('test')->resolve();
+    }
+
+    function __call($name, $arguments) {
+        if (method_exists($this, $name.'Async')) {
+            /** @var Promise $promise */
+            $promise = call_user_func_array([$this, $name.'Async'], $arguments);
+            return $promise->wait();
+        }
     }
 }

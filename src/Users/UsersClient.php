@@ -7,10 +7,21 @@ use Ionic\Client;
 use Ionic\Helpers\Pagination;
 use Ionic\Users\Models\User;
 
+/**
+ * Class UsersClient
+ * @package Ionic\Users
+ * @method User createUser(User $user)
+ * @method User getUser(string $uuid)
+ * @method User updateUser(User $user)
+ * @method void deleteUser(string $uuid)
+ * @method mixed getCustomData(string $uuid)
+ * @method mixed updateCustomData(string $uuid, mixed $data)
+ */
 class UsersClient extends Client {
     /**
      * @param $pagination Pagination
      * @return User[]
+     * @internal Pass by reference requires this function be implemented fully vs called via __call()
      */
     function getUsers(Pagination &$pagination) {
         $results = $this->getUsersAsync($pagination)->wait();
@@ -31,26 +42,10 @@ class UsersClient extends Client {
 
     /**
      * @param User $user
-     * @return User
-     */
-    function createUser(User $user) {
-        // TODO: Implement create user.
-    }
-
-    /**
-     * @param User $user
      * @return Promise
      */
     function createUserAsync(User $user) {
         // TODO: Implement create user.
-    }
-
-    /**
-     * @param $uuid
-     * @return User
-     */
-    function getUser($uuid) {
-        return $this->getUserAsync($uuid)->wait();
     }
 
     /**
@@ -63,25 +58,10 @@ class UsersClient extends Client {
 
     /**
      * @param User $user
-     * @return User
-     */
-    function updateUser($user) {
-        // TODO: Implement update user.
-    }
-
-    /**
-     * @param User $user
      * @return Promise
      */
     function updateUserAsync($user) {
         // TODO: Implement update user.
-    }
-
-    /**
-     * @param $uuid
-     */
-    function deleteUser($uuid) {
-        return $this->deleteUserAsync($uuid)->wait();
     }
 
     /**
@@ -94,27 +74,10 @@ class UsersClient extends Client {
 
     /**
      * @param string $uuid
-     * @return mixed
-     */
-    function getCustomData($uuid) {
-        return $this->getCustomDataAsync($uuid)->wait();
-    }
-
-    /**
-     * @param string $uuid
      * @return Promise
      */
     function getCustomDataAsync($uuid) {
         return $this->getCommand('getCustomData', ['user_uuid' => $uuid])->resolve();
-    }
-
-    /**
-     * @param string $uuid
-     * @param mixed $data
-     * @return mixed
-     */
-    function updateCustomData($uuid, $data) {
-        return $this->updateCustomDataAsync($uuid, $data)->wait();
     }
 
     /**
