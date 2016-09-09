@@ -1,0 +1,21 @@
+{
+    "routes":{
+        "getUsers": {
+            "http": {
+                "method": "GET",
+                "request_uri": "/users"
+            },
+            "params": {
+                "page": {
+                    "optional": false
+                },
+                "page_size": {
+                    "optional": false
+                }
+            },
+            "output": {
+                "array":"\\Ionic\\Users\\Models\\User"
+            }
+        }
+    }
+}

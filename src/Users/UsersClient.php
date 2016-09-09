@@ -3,6 +3,7 @@
 namespace Ionic\Users;
 
 use GuzzleHttp\Promise\Promise;
+use Ionic\API\RouteParser;
 use Ionic\Client;
 use Ionic\Helpers\Pagination;
 use Ionic\Users\Models\User;
@@ -18,6 +19,14 @@ use Ionic\Users\Models\User;
  * @method mixed updateCustomData(string $uuid, mixed $data)
  */
 class UsersClient extends Client {
+
+    function __construct($config) {
+        if (empty($config['route_parser'])) {
+            $config['route_parser'] = new RouteParser(["file" => __DIR__."/../API/users.api.json"]);
+        }
+        parent::__construct($config);
+    }
+
     /**
      * @param $pagination Pagination
      * @return User[]
