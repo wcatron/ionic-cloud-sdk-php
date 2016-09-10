@@ -28,17 +28,43 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
 
     function makeRoute($route) {
         return new Route(function ($params) use ($route) {
-            $uri = new Uri($route['http']['request_uri']);
-            $uri = $uri->withQuery(http_build_query($params));
+            self::validateParameters($route, $params);
             $request = new Request(
                 $route['http']['method'],
-                $uri
+                self::createUri($route, $params)
             );
             return $request;
         }, function (Response $response) use ($route) {
             $output = $route['output'];
             return $this->parseOutput($response, $output);
         });
+    }
+
+    static function validateParameters($route, $params) {
+        foreach ($route['params'] as $key => $requirements) {
+            if ($requirements['optional'] == false) {
+                if (!isset($params[$key])) {
+                    throw new \InvalidArgumentException("Request requires `$key` parameter.");
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $route
+     * @param $params
+     * @return URI
+     */
+    static function createUri($route, $params) {
+        $request_uri = $route['http']['request_uri'];
+        foreach ($route['params'] as $param => $requirements) {
+            if (isset($requirements['uri']) && $requirements['uri']) {
+                $request_uri = str_replace("{{$param}}", $params[$param], $request_uri);
+            }
+        }
+        $uri = new Uri($request_uri);
+        $uri = $uri->withQuery(http_build_query($params));
+        return $uri;
     }
 
     /**

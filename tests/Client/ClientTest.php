@@ -35,7 +35,7 @@ class ClientTest extends PHPUnit_Framework_TestCase {
 
     function testTestAuth() {
         $config = parse_ini_file(__DIR__.'/../config.ini');
-        if (empty($config) || true) {
+        if (empty($config) || false) {
             $this->markTestSkipped("config.ini file not found so assuming you don't want to test real API. That's okay, it's it should only be used to determine test results.");
         }
         $client = new Client($config);
@@ -44,6 +44,8 @@ class ClientTest extends PHPUnit_Framework_TestCase {
         $userClient = new UsersClient($config);
         $response = $userClient->getUsers(new Pagination(1,3));
         $this->assertEquals(3, count($response));
+        $user = $userClient->getUser('c4c0eac7-a20f-4f57-aa63-9fbcebe7513a');
+        $this->assertEquals('c4c0eac7-a20f-4f57-aa63-9fbcebe7513a', $user->uuid);
     }
 
 }

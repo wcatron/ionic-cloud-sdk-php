@@ -7,14 +7,63 @@
             },
             "params": {
                 "page": {
-                    "optional": false
+                    "optional": true,
+                    "default": 1
                 },
                 "page_size": {
-                    "optional": false
+                    "optional": true,
+                    "default": 25
                 }
             },
             "output": {
                 "array":"\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "createUser": {
+            "http": {
+                "method": "POST",
+                "request_uri": "/users"
+            },
+            "params": {
+                "app_id": {
+                    "optional": false
+                },
+                "custom": {
+                    "optional": true
+                },
+                "email": {
+                    "optional": false
+                },
+                "image": {
+                    "optional": true
+                },
+                "name": {
+                    "optional": true
+                },
+                "password": {
+                    "optional": false
+                },
+                "username": {
+                    "optional": true
+                }
+            },
+            "output": {
+                "object":"\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "getUser": {
+            "http": {
+                "method": "GET",
+                "request_uri": "/users/{user_uuid}"
+            },
+            "params": {
+                "user_uuid" :{
+                    "optional" : false,
+                    "in_uri": true
+                }
+            },
+            "output": {
+                "object":"\\Ionic\\Users\\Models\\User"
             }
         }
     }
