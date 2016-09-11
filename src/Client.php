@@ -33,6 +33,7 @@ class Client implements \Ionic\Interfaces\Client {
             $this->handler = $config['http_handler'];
         }
 
+        // TODO: Clean up and document route parser and api configuration options.
         if (empty($config['route_parser'])) {
             $config['route_parser'] = new RouteParser(["file" => __DIR__."/API/api.json"]);
         }

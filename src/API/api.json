@@ -6,7 +6,6 @@
                 "request_uri": "/auth/test"
             },
             "params": {
-
             },
             "output": {
                 "json":""

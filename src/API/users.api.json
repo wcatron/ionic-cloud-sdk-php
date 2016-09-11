@@ -2,7 +2,7 @@
     "routes":{
         "getUsers": {
             "http": {
-                "method": "GET",
+                "method": "get",
                 "request_uri": "/users"
             },
             "params": {
@@ -21,7 +21,7 @@
         },
         "createUser": {
             "http": {
-                "method": "POST",
+                "method": "get",
                 "request_uri": "/users"
             },
             "params": {
@@ -53,7 +53,7 @@
         },
         "getUser": {
             "http": {
-                "method": "GET",
+                "method": "get",
                 "request_uri": "/users/{user_uuid}"
             },
             "params": {
@@ -64,6 +64,18 @@
             },
             "output": {
                 "object":"\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "badRoute": {
+            "http": {
+                "method": "",
+                "request_uri": "/bad/path"
+            },
+            "params": {
+
+            },
+            "output": {
+                "json": ""
             }
         }
     }

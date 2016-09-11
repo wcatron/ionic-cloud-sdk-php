@@ -1,0 +1,235 @@
+{
+    "routes": {
+        "getUsers": {
+            "http": {
+                "method": "get",
+                "request_uri": "/users"
+            },
+            "params": [
+                {
+                    "description": "Sets the number of items to return in paginated endpoints",
+                    "name": "page_size",
+                    "type": "integer",
+                    "format": "int32",
+                    "in": "query",
+                    "required": false
+                },
+                {
+                    "description": "Sets the page number for paginated endpoints",
+                    "name": "page",
+                    "type": "integer",
+                    "format": "int32",
+                    "in": "query",
+                    "required": false
+                }
+            ],
+            "output": {
+                "array": "\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "createUser": {
+            "http": {
+                "method": "post",
+                "request_uri": "/users"
+            },
+            "params": [
+                {
+                    "schema": {
+                        "properties": {
+                            "name": {
+                                "description": "Full Name",
+                                "type": "string"
+                            },
+                            "app_id": {
+                                "description": "App ID",
+                                "type": "string",
+                                "required": true
+                            },
+                            "username": {
+                                "description": "Display username",
+                                "type": "string"
+                            },
+                            "email": {
+                                "description": "E-mail of the User",
+                                "type": "string",
+                                "format": "email",
+                                "required": true
+                            },
+                            "custom": {
+                                "description": "Custom User Data",
+                                "type": "object"
+                            },
+                            "image": {
+                                "description": "URL of a profile image",
+                                "type": "string",
+                                "format": "url"
+                            },
+                            "password": {
+                                "description": "A password to set for the User",
+                                "type": "string",
+                                "required": true
+                            }
+                        },
+                        "type": "object",
+                        "required": [
+                            "password",
+                            "app_id",
+                            "email"
+                        ]
+                    },
+                    "name": "body",
+                    "in": "body",
+                    "required": false
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "getUser": {
+            "http": {
+                "method": "get",
+                "request_uri": "/users/{user_uuid}"
+            },
+            "params": [
+                {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid",
+                    "required": true,
+                    "name": "user_uuid",
+                    "in": "path"
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "updateUser": {
+            "http": {
+                "method": "patch",
+                "request_uri": "/users/{user_uuid}"
+            },
+            "params": [
+                {
+                    "schema": {
+                        "properties": {
+                            "name": {
+                                "description": "Full Name",
+                                "type": "string"
+                            },
+                            "custom": {
+                                "description": "Replace customdata",
+                                "type": "object"
+                            },
+                            "username": {
+                                "description": "Display username",
+                                "type": "string"
+                            },
+                            "email": {
+                                "description": "User's email",
+                                "type": "string",
+                                "format": "email"
+                            },
+                            "image": {
+                                "description": "URL of a profile image",
+                                "type": "string",
+                                "format": "url"
+                            },
+                            "password": {
+                                "description": "New password",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "name": "body",
+                    "in": "body",
+                    "required": false
+                },
+                {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid",
+                    "required": true,
+                    "name": "user_uuid",
+                    "in": "path"
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Users\\Models\\User"
+            }
+        },
+        "deleteUser": {
+            "http": {
+                "method": "delete",
+                "request_uri": "/users/{user_uuid}"
+            },
+            "params": [
+                {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid",
+                    "required": true,
+                    "name": "user_uuid",
+                    "in": "path"
+                }
+            ],
+            "output": {
+                "json": ""
+            }
+        },
+        "setCustomData": {
+            "http": {
+                "method": "put",
+                "request_uri": "/users/{user_uuid}/custom"
+            },
+            "params": [
+                {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid",
+                    "required": true,
+                    "name": "user_uuid",
+                    "in": "path"
+                },
+                {
+                    "name": "*",
+                    "in": "body",
+                    "description": "",
+                    "internal": "This has to be added to catch all other params as custom data."
+                }
+            ],
+            "params_custom": [
+                {
+                    "name": "*",
+                    "in": "body",
+                    "description": "",
+                    "internal": "This has to be added to catch all other params as custom data."
+                }
+            ],
+            "output": {
+                "json": ""
+            }
+        },
+        "getCustomData": {
+            "http": {
+                "method": "get",
+                "request_uri": "/users/{user_uuid}/custom"
+            },
+            "params": [
+                {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid",
+                    "required": true,
+                    "name": "user_uuid",
+                    "in": "path"
+                }
+            ],
+            "output": {
+                "json": ""
+            }
+        }
+    }
+}

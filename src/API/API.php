@@ -5,17 +5,18 @@ namespace Ionic\API;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
+use Ionic\API\Interfaces\Route as RouteInterface;
 use Psr\Http\Message\RequestInterface;
 
 class API implements \Ionic\API\Interfaces\API {
     /**
-     * @var Route[]
+     * @var RouteInterface[]
      */
     private $routes = [];
 
     /**
      * API constructor.
-     * @param Route[] $routes
+     * @param RouteInterface[] $routes
      */
     function __construct($routes = []) {
         $this->routes = $routes;
@@ -37,6 +38,14 @@ class API implements \Ionic\API\Interfaces\API {
      */
     function processOutput($name, Response $results) {
         return $this->routes[$name]->process($results);
+    }
+
+    /**
+     * @param $name
+     * @return RouteInterface
+     */
+    function getRoute($name) {
+        return $this->routes[$name];
     }
 
 }

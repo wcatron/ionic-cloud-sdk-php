@@ -14,7 +14,11 @@ class APITest extends PHPUnit_Framework_TestCase {
                         "request_uri" => "/sample"
                     ],
                     "params" => [
-
+                        [
+                            "name" => "a",
+                            "required" => true,
+                            "in" => "query"
+                        ]
                     ],
                     "output" => [ "json" => "" ]
                 ]
@@ -38,14 +42,20 @@ class APITest extends PHPUnit_Framework_TestCase {
                         "request_uri" => "/sample"
                     ],
                     "params" => [
-                        "a" => [
-                            "optional" => false
+                        [
+                            "name" => "a",
+                            "in" => "query",
+                            "required" => true
                         ],
-                        "required_param" => [
-                            "optional" => false
+                        [
+                            "name" => "required_param",
+                            "in" => "query",
+                            "required" => true
                         ],
-                        "optional_param" => [
-                            "optional" => true
+                        [
+                            "name" => "optional_param",
+                            "in" => "query",
+                            "required" => false
                         ]
                     ],
                     "output" => [ "json" => "" ]
@@ -65,16 +75,20 @@ class APITest extends PHPUnit_Framework_TestCase {
                         "request_uri" => "/sample/{a}"
                     ],
                     "params" => [
-                        "a" => [
-                            "optional" => false,
-                            "uri" => true
+                        [
+                            "name" => "a",
+                            "required" => true,
+                            "in" => "path"
                         ],
-                        "b" => [
-                            "optional" => false,
-                            "uri" => false
+                        [
+                            "name" => "b",
+                            "required" => true,
+                            "in" => "query"
                         ],
-                        "c" => [
-                            "optional" => false
+                        [
+                            "name" => "c",
+                            "required" => true,
+                            "in" => "query"
                         ]
                     ],
                     "output" => [ "json" => "" ]

@@ -22,7 +22,7 @@ class UsersClient extends Client {
 
     function __construct($config) {
         if (empty($config['route_parser'])) {
-            $config['route_parser'] = new RouteParser(["file" => __DIR__."/../API/users.api.json"]);
+            $config['route_parser'] = new RouteParser(["file" => __DIR__."/../API/versions/2.0.0-beta.0/users.api.json"]);
         }
         parent::__construct($config);
     }
@@ -30,7 +30,7 @@ class UsersClient extends Client {
     /**
      * @param $pagination Pagination
      * @return User[]
-     * @internal Pass by reference requires this function be implemented fully vs called via __call()
+     * Note: Pass by reference requires this function be implemented fully vs called via __call()
      */
     function getUsers(Pagination &$pagination) {
         $results = $this->getUsersAsync($pagination)->wait();

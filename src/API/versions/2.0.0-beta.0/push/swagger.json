@@ -1,0 +1,1441 @@
+{
+    "mimetypes": [
+        "text/plain; charset=utf-8",
+        "application/json"
+    ],
+    "paths": {
+        "/notifications/{notification_id}/messages": {
+            "get": {
+                "x-category": "Notifications",
+                "responses": {
+                    "200": {
+                        "description": "Notification's Messages",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "items": {
+                                        "$ref": "#/definitions/Message"
+                                    },
+                                    "description": "Resource Data",
+                                    "type": "array"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Notification ID",
+                        "name": "notification_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "List Messages"
+            }
+        },
+        "/notifications/{notification_id}": {
+            "put": {
+                "x-category": "Notifications",
+                "responses": {
+                    "200": {
+                        "description": "Notification",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Notification",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "schema": {
+                            "$ref": "#/definitions/NotificationInput"
+                        },
+                        "name": "body",
+                        "in": "body",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Notification ID",
+                        "name": "notification_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Replace"
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Notification",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Notifications",
+                "description": "Get a Notification",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Notification ID",
+                        "name": "notification_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Retrieve"
+            },
+            "delete": {
+                "x-category": "Notifications",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Notification ID",
+                        "name": "notification_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Delete"
+            }
+        },
+        "/tokens/{token_id}/users": {
+            "get": {
+                "x-category": "Device Tokens",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "description": "Token ID (MD5 Hash of the token)",
+                        "name": "token_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "List associated Users"
+            }
+        },
+        "/tokens/{token_id}/users/{user_id}": {
+            "post": {
+                "x-category": "Device Tokens",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "Token ID (MD5 Hash of the token)",
+                        "name": "token_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Associate a User"
+            },
+            "delete": {
+                "x-category": "Device Tokens",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "Token ID (MD5 Hash of the token)",
+                        "name": "token_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Dissociate a User"
+            }
+        },
+        "/notifications": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Notification",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Notification",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Notifications",
+                "description": "Create a Push Notification\n\nIn the following examples, fill in the following:\n\n| `DEVICE_TOKEN` | The device token you [registered and saved](/services/push/#registering-device-tokens) \n| `PROFILE_TAG`  | The Security Profile tag found in Settings \u203a Certificates in the [Dashboard](https://apps.ionic.io) \n\nYou can send a push notification directly to a device token like so:\n\n{: highlight=\"2,3\"}\n```json\n{\n    \"tokens\": [\"DEVICE_TOKEN\"],\n    \"profile\": \"PROFILE_TAG\",\n    \"notification\": {\n        \"message\": \"Hello World!\"\n    }\n}\n```\n\n### Targeting Options\n\nYou can send to more than just device tokens, however.\nDepending on which [authentication\nproviders](/services/users/#providers) you have enabled, you\ncan use the following targeting fields:\n\n| Field          | Provider        |\n|----------------|-----------------|-\n| `tokens`       |                 | Device Tokens\n| `user_ids`     | Email/Password  | User UUIDs\n| `emails`       | Email/Password  | User email addresses\n| `external_ids` | Custom          | User IDs on your server\n| `facebook_ids` | Facebook        | Facebook IDs\n| `google_ids`   | Google          | Google IDs\n| `twitter_ids`  | Twitter         | Twitter IDs (not handles)\n| `linkedin_ids` | LinkedIn        | LinkedIn IDs\n| `github_ids`   | Github          | Github IDs\n| `send_to_all`  |                 | Ignore targeting and send to all devices\n\n### Platform Overrides\n\nYou can override notification fields per platform.\n\n{: highlight=\"2,3\"}\n```json\n{\n    \"tokens\": [\"DEVICE_TOKEN\"],\n    \"profile\": \"PROFILE_TAG\",\n    \"notification\": {\n        \"message\": \"Hello World!\",\n        \"ios\": {\n            \"message\": \"Hello iOS!\"\n        },\n        \"android\": {\n            \"message\": \"Hello Android\"\n        }\n    }\n}\n```",
+                "parameters": [
+                    {
+                        "schema": {
+                            "$ref": "#/definitions/NotificationInput"
+                        },
+                        "name": "body",
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Create"
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Push Notifications",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "items": {
+                                        "$ref": "#/definitions/Notification"
+                                    },
+                                    "description": "Resource Data",
+                                    "type": "array"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-fields": {
+                    "message_total": {
+                        "description": "Total number of messages tied to the notification",
+                        "name": "message_total"
+                    }
+                },
+                "x-category": "Notifications",
+                "description": "Paginated listing of Push Notifications for an App",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "items": {
+                            "enum": [
+                                "message_total"
+                            ],
+                            "type": "string"
+                        },
+                        "description": "Additional Fields to return",
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array"
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "List"
+            }
+        },
+        "/tokens": {
+            "post": {
+                "x-body": {
+                    "token": "Device Token",
+                    "user_id": "User ID. Associate the token with the User."
+                },
+                "responses": {
+                    "200": {
+                        "description": "Created Token",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Token",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Device Tokens",
+                "description": "Saves a device token that was previously generated by a device platform.",
+                "parameters": [
+                    {
+                        "schema": {
+                            "properties": {
+                                "app_id": {
+                                    "type": "string"
+                                },
+                                "token": {
+                                    "description": "Device Token",
+                                    "type": "string"
+                                },
+                                "user_id": {
+                                    "description": "User ID. Associate the token with the User.",
+                                    "format": "uuid",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object",
+                            "required": [
+                                "token"
+                            ]
+                        },
+                        "name": "body",
+                        "in": "body",
+                        "required": false
+                    }
+                ],
+                "summary": "Create"
+            },
+            "get": {
+                "x-query": {
+                    "show_invalid": "Determines whether to include invalidated tokens",
+                    "user_id": "Only display tokens associated with the User ID."
+                },
+                "responses": {
+                    "200": {
+                        "description": "Device Tokens",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "items": {
+                                        "$ref": "#/definitions/Token"
+                                    },
+                                    "description": "Resource Data",
+                                    "type": "array"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Device Tokens",
+                "parameters": [
+                    {
+                        "name": "show_invalid",
+                        "in": "query",
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "user_id",
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "List"
+            }
+        },
+        "/tokens/{token_id}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Device Token",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Token",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Device Tokens",
+                "description": "Get information about a specific Token. Remember to use an MD5 hash of the token string you are trying to retrieve for the Token ID.",
+                "parameters": [
+                    {
+                        "description": "Token ID (MD5 Hash of the token)",
+                        "name": "token_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Retrieve"
+            },
+            "patch": {
+                "x-body": {
+                    "valid": "Determines whether the device token is valid"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Device Token",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Token",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Device Tokens",
+                "parameters": [
+                    {
+                        "schema": {
+                            "properties": {
+                                "valid": {
+                                    "description": "Determines whether the device token is valid",
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": "body",
+                        "in": "body",
+                        "required": false
+                    },
+                    {
+                        "description": "Token ID (MD5 Hash of the token)",
+                        "name": "token_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Update"
+            },
+            "delete": {
+                "x-category": "Device Tokens",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "parameters": [
+                    {
+                        "description": "Token ID (MD5 Hash of the token)",
+                        "name": "token_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Delete"
+            }
+        },
+        "/messages/{message_id}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Push Notification Message",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "description": "Resource Data",
+                                    "$ref": "#/definitions/Message",
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "description": "Response Metadata",
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "format": "semver",
+                                            "type": "string"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "format": "uuid",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "format": "int32",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-category": "Messages",
+                "description": "Get Message details. Use this endpoint to check the current status of a message or to lookup the error code for failures.",
+                "parameters": [
+                    {
+                        "description": "Message ID",
+                        "name": "message_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Retrieve"
+            },
+            "delete": {
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "x-category": "Messages",
+                "description": "Deletes a Message",
+                "parameters": [
+                    {
+                        "description": "Message ID",
+                        "name": "message_id",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "security": {
+                    "token": []
+                },
+                "summary": "Delete"
+            }
+        }
+    },
+    "basePath": "/push",
+    "securityDefinitions": {
+        "token": {
+            "name": "Authorization",
+            "in": "header",
+            "type": "apiKey"
+        }
+    },
+    "description": "Manage mobile Push Notifications",
+    "swagger": "2.0",
+    "tags": [],
+    "consumes": [
+        "application/json"
+    ],
+    "info": {
+        "version": "2.0.0-beta.0",
+        "title": "Push Notifications API",
+        "host": "api.ionic.io"
+    },
+    "definitions": {
+        "NotificationInput": {
+            "type": "object",
+            "description": "Notification Config",
+            "properties": {
+                "instagram_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Instagram User IDs for delivery",
+                    "type": "array"
+                },
+                "google_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Google+ User IDs for delivery",
+                    "type": "array"
+                },
+                "user_ids": {
+                    "items": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "description": "Targets User IDs for delivery",
+                    "type": "array"
+                },
+                "external_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Custom Authentication User IDs for delivery",
+                    "type": "array"
+                },
+                "linkedin_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets LinkedIn User IDs for delivery",
+                    "type": "array"
+                },
+                "scheduled": {
+                    "description": "Time to start delivery of the notification",
+                    "type": "string"
+                },
+                "emails": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets User email address for delivery",
+                    "type": "array"
+                },
+                "profile": {
+                    "description": "Security Profile Tag to use when sending Messages",
+                    "type": "string",
+                    "required": true
+                },
+                "github_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Github User IDs for delivery",
+                    "type": "array"
+                },
+                "send_to_all": {
+                    "description": "Targets all valid Device Tokens for delivery, ignores other delivery options",
+                    "type": "boolean"
+                },
+                "twitter_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Twitter User IDs for delivery",
+                    "type": "array"
+                },
+                "notification": {
+                    "$ref": "#/definitions/NotificationConfig",
+                    "required": true
+                },
+                "facebook_ids": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Facebook User IDs for delivery",
+                    "type": "array"
+                },
+                "tokens": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Targets Device Tokens for delivery",
+                    "type": "array"
+                }
+            },
+            "required": [
+                "profile",
+                "notification"
+            ]
+        },
+        "IOSNotificationConfig": {
+            "description": "iOS Notification Options",
+            "properties": {
+                "message": {
+                    "description": "Notification Text",
+                    "type": "string"
+                },
+                "content_available": {
+                    "maximum": 1,
+                    "description": "Determines if the message should be delivered as a silent notification. A value of `1` will cause the message to be delivered as a background notification, which will not display a notification to the user, but the application can still process the notification.",
+                    "format": "int32",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "data": {
+                    "description": "Raw data sent to APNS",
+                    "type": "object"
+                },
+                "badge": {
+                    "description": "The number to display as the badge of the app icon",
+                    "format": "int32",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "sound": {
+                    "description": "Filename of audio file to play when a notification is received. Setting this to `default` will use the default iOS device notification sound",
+                    "type": "string"
+                },
+                "template_defaults": {
+                    "description": "Default values to for template variables when a corresponding user does not have a value",
+                    "type": "object"
+                },
+                "expire": {
+                    "description": "Time at which APNS will stop trying to deliver the notification",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Alert Title, only applicable for iWatch devices",
+                    "type": "string"
+                },
+                "priority": {
+                    "default": 5,
+                    "description": "Message Priority. A value of `10` will cause APNS to attempt immediate delivery. A value of `5` will attempt a delivery which is convenient for battery life.",
+                    "enum": [
+                        10,
+                        5
+                    ],
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "payload": {
+                    "description": "Custom data",
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "AutomatedNotification": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "is_active": {
+                    "description": "Notifications will only be triggered if this is true",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "Reference Name",
+                    "type": "string"
+                },
+                "app_id": {
+                    "description": "App ID",
+                    "type": "string"
+                },
+                "uuid": {
+                    "description": "Automated Notification ID",
+                    "type": "string"
+                },
+                "activated": {
+                    "description": "When the automated notification was activated",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uuid"
+            ]
+        },
+        "Message": {
+            "description": "Push Notification Message",
+            "properties": {
+                "created": {
+                    "description": "When the Message was created",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "notification_id": {
+                    "description": "Parent Notification ID",
+                    "format": "uuid"
+                },
+                "token": {
+                    "description": "Message was sent to this token",
+                    "$ref": "#/definitions/Token",
+                    "properties": {
+                        "created": {
+                            "format": "date-time",
+                            "type": "string"
+                        },
+                        "app_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "enum": [
+                                "ios",
+                                "android"
+                            ],
+                            "maxLength": 7,
+                            "type": "string"
+                        },
+                        "token": {
+                            "type": "string"
+                        },
+                        "invalidated": {
+                            "type": "string"
+                        },
+                        "valid": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object",
+                    "required": [
+                        "app_id",
+                        "type"
+                    ]
+                },
+                "error": {
+                    "description": "Messaged failed due to this error",
+                    "enum": [
+                        "APNS_BAD_CERTIFICATE",
+                        "APNS_UNKNOWN",
+                        "APNS_BAD_DEVICE_TOKEN",
+                        "GCM_ERROR",
+                        "GCM_MISMATCH_SENDER",
+                        "GCM_TOO_BIG",
+                        "ILLEGAL_CREDENTIAL_FORMAT",
+                        "APNS_CERTIFICATE_NOT_AVAILABLE",
+                        "APNS_BAD_EXPIRATION_DATE",
+                        "INVALID_CREDENTIAL_PASSWORD",
+                        "UNABLE_TO_AUTH",
+                        "APNS_TOO_MANY_REQUESTS",
+                        "APNS_TOO_LARGE",
+                        "NO_VALID_TOKENS",
+                        "INVALID_TOKEN",
+                        "APNS_BAD_CERTIFICATE_ENVIRONMENT",
+                        "GCM_INVALID_AUTH",
+                        "UNKNOWN",
+                        "APNS_SHUTDOWN",
+                        "APNS_BAD_PATH",
+                        "GCM_INVALID_PACKAGE",
+                        "APNS_DUPLICATE_HEADERS",
+                        "APNS_BAD_PRIORITY",
+                        "APNS_FORBIDDEN",
+                        "APNS_SERVICE_UNAVAILABLE",
+                        "APNS_MISSING_TOPIC",
+                        "APNS_PAYLOAD_TOO_LARGE",
+                        "APNS_INTERNAL_SERVER_ERROR",
+                        "NO_CREDENTIAL",
+                        "APNS_PAYLOAD_EMPTY",
+                        "APNS_METHOD_NOT_ALLOWED",
+                        "GCM_INVALID_TTL",
+                        "GCM_INVALID_REGISTRATION",
+                        "INVALID_MESSAGE_FORMAT",
+                        "GCM_INVALID_KEY",
+                        "APNS_UNREGISTERED",
+                        "APNS_MAC_VERIFY_FAILURE",
+                        "APNS_INVALID_CERTIFICATE",
+                        "APNS_BAD_MESSAGE_ID",
+                        "GCM_UNKNOWN",
+                        "APNS_IDLE_TIMEOUT",
+                        "APNS_DEVICE_TOKEN_NOT_FOR_TOPIC",
+                        "APNS_BAD_TOPIC",
+                        "APNS_TOPIC_DISALLOWED",
+                        "APNS_MISSING_DEVICE_TOKEN"
+                    ],
+                    "maxLength": 32,
+                    "type": "string",
+                    "x-values": [
+                        {
+                            "value": "INVALID",
+                            "description": "Severe error. Please [check our status page](https://status.ionic.io/) or [open an issue](https://github.com/driftyco/ionic-cloud-issues/issues)."
+                        },
+                        {
+                            "value": "UNKNOWN",
+                            "description": "GCM or APNS may be experiencing trouble."
+                        },
+                        {
+                            "value": "UNABLE_TO_AUTH",
+                            "description": "TODO: is this even possible?"
+                        },
+                        {
+                            "value": "NO_CREDENTIAL",
+                            "description": "[Security Profile](/services/profiles) not found or does not have the appropriate credentials. You will need GCM credentials for Android and APNS credentials for iOS."
+                        },
+                        {
+                            "value": "INVALID_MESSAGE_FORMAT",
+                            "description": "Your notification had an invalid payload."
+                        },
+                        {
+                            "value": "ILLEGAL_CREDENTIAL_FORMAT",
+                            "description": "The credentials on your Security Profile are invalid. You may need to regenerate and re-upload."
+                        },
+                        {
+                            "value": "INVALID_CREDENTIAL_PASSWORD",
+                            "description": "The password on your credential's certificate was incorrect. You can verify the password by using OpenSSL (`openssl pkcs12 -in Certificates.p12`)."
+                        },
+                        {
+                            "value": "NO_VALID_TOKENS",
+                            "description": "Your request didn't target any valid tokens. If you're sending via user IDs, ensure those users have device tokens."
+                        },
+                        {
+                            "value": "INVALID_TOKEN",
+                            "description": "The device token has been marked invalid. [Re-register](/push.html#registering-device-tokens) the device."
+                        },
+                        {
+                            "value": "APNS_BAD_TOPIC",
+                            "description": "Invalid APNS topic (bundle ID) or the bundle ID in your certificate does not match your app."
+                        },
+                        {
+                            "value": "APNS_TOPIC_DISALLOWED",
+                            "description": "Sending pushes to the APNS topic was not allowed. Are Apple Push Notifications enabled for your app? Is the bundle ID of your certificate correct?"
+                        },
+                        {
+                            "value": "APNS_BAD_DEVICE_TOKEN",
+                            "description": "Verify that you specified a valid token and that your Security Profile's type (development/production) matches your push certificate's type."
+                        },
+                        {
+                            "value": "APNS_DEVICE_TOKEN_NOT_FOR_TOPIC",
+                            "description": "The device token does not match the specified topic. You may be using a device token from a different app."
+                        },
+                        {
+                            "value": "APNS_UNREGISTERED",
+                            "description": "The device token is no longer active for your app."
+                        },
+                        {
+                            "value": "APNS_BAD_CERTIFICATE_ENVIRONMENT",
+                            "description": "Your certificate was used in the wrong environment (production vs development). Make sure your Security Profile's type (development/production) matches your push certificate's type."
+                        },
+                        {
+                            "value": "APNS_BAD_CERTIFICATE",
+                            "description": "For some reason, your certificate was bad. APNS does not tell us more. Try regenerating the certificate for your app."
+                        },
+                        {
+                            "value": "GCM_INVALID_AUTH",
+                            "description": "You could have an incorrect GCM project number or API key, or have the service disabled. Also make sure you have not set up an IP whitelist."
+                        },
+                        {
+                            "value": "GCM_ERROR",
+                            "description": "Something has gone wrong in GCM."
+                        },
+                        {
+                            "value": "GCM_INVALID_REGISTRATION",
+                            "description": "Your request contained an incorrect device token (`registration_id`). Check that you're entering the token in correctly."
+                        },
+                        {
+                            "value": "GCM_INVALID_PACKAGE",
+                            "description": "Invalid package name. Make sure the message was addressed to a registration token whose package name matches the value passed in the request."
+                        },
+                        {
+                            "value": "GCM_MISMATCH_SENDER",
+                            "description": "When a client app registers for GCM, it must specify which senders are allowed to send messages. If you switch to a different sender, the existing registration tokens won't work."
+                        },
+                        {
+                            "value": "GCM_TOO_BIG",
+                            "description": "The total size of the payload data included in a message must not exceed 4096 bytes."
+                        },
+                        {
+                            "value": "GCM_INVALID_KEY",
+                            "description": "The payload data must not contain keys such as `from`, `gcm`, or any value prefixed by `google`."
+                        },
+                        {
+                            "value": "GCM_INVALID_TTL",
+                            "description": "The value used in `time_to_live` is an integer between 0 and 2,419,200 (seconds)."
+                        },
+                        {
+                            "value": "GCM_UNKNOWN",
+                            "description": "Something went wrong on while communicating with GCM. Please [check our status page](https://status.ionic.io/) or [open an issue](https://github.com/driftyco/ionic-cloud-issues/issues)."
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "Current status",
+                    "enum": [
+                        "syserror",
+                        "pending",
+                        "error",
+                        "sent",
+                        "queued"
+                    ],
+                    "maxLength": 8,
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "Message was tied to this User ID",
+                    "format": "uuid",
+                    "type": "string"
+                },
+                "uuid": {
+                    "description": "Message ID",
+                    "format": "uuid",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Notification": {
+            "type": "object",
+            "description": "Notification Schema",
+            "properties": {
+                "state": {
+                    "description": "Current state of the Notication in regards to our processing pipeline. The final state is `enqueued`. This means the notification has been processed and is now in the process of generating `Message` objects.",
+                    "enum": [
+                        "enqueued",
+                        "pending",
+                        "scheduled",
+                        "failed"
+                    ],
+                    "maxLength": 9,
+                    "type": "string",
+                    "x-values": [
+                        {
+                            "value": "pending",
+                            "description": "Notification has not begun processing"
+                        },
+                        {
+                            "value": "scheduled",
+                            "description": "Notification is waiting for the scheduled time to begin processing."
+                        },
+                        {
+                            "value": "failed",
+                            "description": "Notification encountered an error on our end and will not attempt to resend. This does not indicate an error with the format of your notification."
+                        },
+                        {
+                            "value": "enqueued",
+                            "description": "Notification successfully processed. [Messages](#model-message) should now be generated."
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "Determines whether or not the Notification can be modified",
+                    "enum": [
+                        "open",
+                        "locked"
+                    ],
+                    "maxLength": 6,
+                    "type": "string",
+                    "x-values": [
+                        {
+                            "value": "open",
+                            "description": "Modifications are still allowed."
+                        },
+                        {
+                            "value": "locked",
+                            "description": "No modifications can be made as the Notification has already generated messages."
+                        }
+                    ]
+                },
+                "app_id": {
+                    "description": "App ID the Notification belongs to.",
+                    "type": "string"
+                },
+                "created": {
+                    "description": "Time of Notification creation",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "config": {
+                    "type": "object",
+                    "$ref": "#/definitions/NotificationConfig"
+                }
+            },
+            "required": [
+                "app_id"
+            ]
+        },
+        "NotificationConfig": {
+            "description": "Notification Config",
+            "properties": {
+                "message": {
+                    "description": "Notification text",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Notification title to show on devices as applicable",
+                    "type": "string"
+                },
+                "ios": {
+                    "$ref": "#/definitions/IOSNotificationConfig"
+                },
+                "android": {
+                    "$ref": "#/definitions/AndroidNotificationConfig"
+                },
+                "payload": {
+                    "description": "Payload data",
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "AndroidNotificationConfig": {
+            "description": "Android Notification Options",
+            "properties": {
+                "message": {
+                    "description": "Message Text",
+                    "type": "string"
+                },
+                "time_to_live": {
+                    "maximum": 2419200,
+                    "description": "This parameter specifies how long (in seconds) the message should be kept in GCM storage if the device is offline",
+                    "format": "int32",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "image": {
+                    "description": "Filename or URI of an image file to display with the notification",
+                    "type": "string"
+                },
+                "sound": {
+                    "description": "Filename of audio file to play when a notification is received. Setting this to `default` will use the default Android device notification sound",
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "Filename of the Icon to display with the notification",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "Notification Title",
+                    "type": "string"
+                },
+                "tag": {
+                    "description": "Indicates whether each notification message results in a new entry on the notification center on Android. If not set, each request creates a new notification. If set, and a notification with the same tag is already being shown, the new notification replaces the existing one in notification center.",
+                    "type": "string"
+                },
+                "payload": {
+                    "description": "Custom data",
+                    "type": "object"
+                },
+                "template_defaults": {
+                    "description": "Default values to for template variables when a corresponding user does not have a value",
+                    "type": "object"
+                },
+                "data": {
+                    "description": "Raw data sent to GCM",
+                    "type": "object"
+                },
+                "delay_while_idle": {
+                    "description": "When this parameter is set to true, it indicates that the message should not be sent until the device becomes active.",
+                    "type": "boolean"
+                },
+                "collapse_key": {
+                    "description": "Identifies a group of messages that can be collapsed, so that only the last message gets sent when delivery can be resumed.",
+                    "type": "string"
+                },
+                "content_available": {
+                    "maximum": 1,
+                    "description": "Determines if the message should be delivered as a silent notification. A value of `1` will cause the message to be delivered as a background notification, which will not display a notification to the user, but the application can still process the notification.",
+                    "format": "int32",
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "type": "object"
+        },
+        "Token": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "id": {
+                    "description": "Token ID. A MD5 hash of the device token",
+                    "type": "string"
+                },
+                "invalidated": {
+                    "description": "When the Token was last invalidated",
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Platform of the Token",
+                    "enum": [
+                        "ios",
+                        "android"
+                    ],
+                    "maxLength": 7,
+                    "type": "string"
+                },
+                "token": {
+                    "description": "Device Token",
+                    "type": "string"
+                },
+                "app_id": {
+                    "description": "App ID the Token belongs to",
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Validity of the Token",
+                    "type": "boolean"
+                },
+                "created": {
+                    "description": "When the Token was created",
+                    "format": "date-time",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "app_id",
+                "type"
+            ]
+        }
+    },
+    "parameters": {
+        "page_size": {
+            "format": "int32",
+            "description": "Sets the number of items to return in paginated endpoints",
+            "name": "page_size",
+            "in": "query",
+            "type": "integer"
+        },
+        "page": {
+            "format": "int32",
+            "description": "Sets the page number for paginated endpoints",
+            "name": "page",
+            "in": "query",
+            "type": "integer"
+        }
+    },
+    "security": [
+        "token"
+    ]
+}

@@ -1,0 +1,878 @@
+{
+    "info": {
+        "title": "Authentication & Users API",
+        "version": "2.0.0-beta.0",
+        "host": "api.ionic.io"
+    },
+    "paths": {
+        "/integrations/custom/success": {},
+        "/users/password/reset": {},
+        "/users/query/minimal": {},
+        "/integrations/instagram/": {},
+        "/integrations/facebook/": {},
+        "/integrations/linkedin/": {},
+        "/integrations/twitter/": {},
+        "/integrations/custom/": {},
+        "/integrations/github/": {},
+        "/integrations/google/": {},
+        "/login/instagram": {},
+        "/users/password": {},
+        "/users/segments": {},
+        "/login/facebook": {},
+        "/login/linkedin": {},
+        "/login/twitter": {},
+        "/users/fields": {},
+        "/login/custom": {},
+        "/login/github": {},
+        "/login/google": {},
+        "/users/query": {},
+        "/users/self": {},
+        "/integrations": {},
+        "/tokens": {},
+        "/users": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    }
+                ],
+                "summary": "List",
+                "x-category": "Users",
+                "description": "Returns a paginated collection of Users",
+                "responses": {
+                    "200": {
+                        "description": "Users",
+                        "schema": {
+                            "properties": {
+                                "meta": {
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "type": "string",
+                                            "format": "semver"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "description": "Response Metadata",
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "description": "Resource Data",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/User"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": {
+                    "token": []
+                }
+            },
+            "post": {
+                "parameters": [
+                    {
+                        "schema": {
+                            "properties": {
+                                "name": {
+                                    "description": "Full Name",
+                                    "type": "string"
+                                },
+                                "app_id": {
+                                    "description": "App ID",
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "username": {
+                                    "description": "Display username",
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "description": "E-mail of the User",
+                                    "type": "string",
+                                    "format": "email",
+                                    "required": true
+                                },
+                                "custom": {
+                                    "description": "Custom User Data",
+                                    "type": "object"
+                                },
+                                "image": {
+                                    "description": "URL of a profile image",
+                                    "type": "string",
+                                    "format": "url"
+                                },
+                                "password": {
+                                    "description": "A password to set for the User",
+                                    "type": "string",
+                                    "required": true
+                                }
+                            },
+                            "type": "object",
+                            "required": [
+                                "password",
+                                "app_id",
+                                "email"
+                            ]
+                        },
+                        "name": "body",
+                        "in": "body",
+                        "required": false
+                    }
+                ],
+                "summary": "Create",
+                "x-category": "Users",
+                "description": "Create a new User. This is only applicable for the Email/Password provider. Other providers will automatically generate the user upon a successful login.",
+                "responses": {
+                    "201": {
+                        "description": "User",
+                        "schema": {
+                            "properties": {
+                                "meta": {
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "type": "string",
+                                            "format": "semver"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "description": "Response Metadata",
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "description": "Resource Data",
+                                    "type": "object",
+                                    "$ref": "#/definitions/User"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "x-body": {
+                    "name": "Full Name",
+                    "app_id": {
+                        "description": "App ID",
+                        "required": true
+                    },
+                    "username": "Display username",
+                    "email": {
+                        "description": "E-mail of the User",
+                        "required": true
+                    },
+                    "custom": {
+                        "description": "Custom User Data",
+                        "type": "object"
+                    },
+                    "image": {
+                        "description": "URL of a profile image",
+                        "format": "url"
+                    },
+                    "password": {
+                        "description": "A password to set for the User",
+                        "required": true
+                    }
+                }
+            }
+        },
+        "/login": {},
+        "/test": {},
+        "/users/segments/{segment_uuid}/users": {},
+        "/users/segments/{segment_uuid}": {},
+        "/users/fields/{field_uuid}": {},
+        "/users/fields/{tag}": {},
+        "/users/{user_uuid}/password-reset": {},
+        "/users/{user_uuid}/custom": {
+            "get": {
+                "parameters": [
+                    {
+                        "description": "User ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "required": true,
+                        "name": "user_uuid",
+                        "in": "path"
+                    }
+                ],
+                "summary": "Retrieve Custom Data",
+                "x-category": "Users",
+                "description": "Returns the Custom Data for a User",
+                "responses": {
+                    "200": {
+                        "summary": "Custom Data",
+                        "schema": {
+                            "properties": {
+                                "meta": {
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "type": "string",
+                                            "format": "semver"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "description": "Response Metadata",
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "description": "Resource Data",
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": {
+                    "token": []
+                }
+            },
+            "put": {
+                "parameters": [
+                    {
+                        "description": "User ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "required": true,
+                        "name": "user_uuid",
+                        "in": "path"
+                    }
+                ],
+                "summary": "Replace Custom Data",
+                "x-category": "Users",
+                "description": "Sets a new custom data object for a User. The JSON body sent to this endpoint will become the new custom data object for the user.",
+                "responses": {
+                    "200": {
+                        "summary": "Custom Data",
+                        "schema": {
+                            "properties": {
+                                "meta": {
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "type": "string",
+                                            "format": "semver"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "description": "Response Metadata",
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "description": "Resource Data",
+                                    "name": "data",
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": {
+                    "token": []
+                }
+            }
+        },
+        "/tokens/{token_uuid}": {},
+        "/users/{user_uuid}": {
+            "get": {
+                "parameters": [
+                    {
+                        "description": "User ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "required": true,
+                        "name": "user_uuid",
+                        "in": "path"
+                    }
+                ],
+                "summary": "Retrieve",
+                "x-category": "Users",
+                "description": "Retrieve a User",
+                "responses": {
+                    "200": {
+                        "description": "User",
+                        "schema": {
+                            "properties": {
+                                "meta": {
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "type": "string",
+                                            "format": "semver"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "description": "Response Metadata",
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "description": "Resource Data",
+                                    "type": "object",
+                                    "$ref": "#/definitions/User"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": {
+                    "token": []
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "description": "User ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "required": true,
+                        "name": "user_uuid",
+                        "in": "path"
+                    }
+                ],
+                "summary": "Delete",
+                "x-category": "Users",
+                "description": "Delete a User",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "security": {
+                    "token": []
+                }
+            },
+            "patch": {
+                "parameters": [
+                    {
+                        "schema": {
+                            "properties": {
+                                "name": {
+                                    "description": "Full Name",
+                                    "type": "string"
+                                },
+                                "custom": {
+                                    "description": "Replace customdata",
+                                    "type": "object"
+                                },
+                                "username": {
+                                    "description": "Display username",
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "description": "User's email",
+                                    "type": "string",
+                                    "format": "email"
+                                },
+                                "image": {
+                                    "description": "URL of a profile image",
+                                    "type": "string",
+                                    "format": "url"
+                                },
+                                "password": {
+                                    "description": "New password",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": "body",
+                        "in": "body",
+                        "required": false
+                    },
+                    {
+                        "description": "User ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "required": true,
+                        "name": "user_uuid",
+                        "in": "path"
+                    }
+                ],
+                "summary": "Update",
+                "x-category": "Users",
+                "description": "Update a User",
+                "responses": {
+                    "200": {
+                        "description": "User",
+                        "schema": {
+                            "properties": {
+                                "meta": {
+                                    "properties": {
+                                        "version": {
+                                            "description": "API Version",
+                                            "type": "string",
+                                            "format": "semver"
+                                        },
+                                        "request_id": {
+                                            "description": "Request Reference ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "description": "HTTP Response Code",
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "description": "Response Metadata",
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "description": "Resource Data",
+                                    "type": "object",
+                                    "$ref": "#/definitions/User"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": {
+                    "token": []
+                },
+                "x-body": {
+                    "name": "Full Name",
+                    "custom": "Replace customdata",
+                    "username": "Display username",
+                    "email": "User's email",
+                    "image": "URL of a profile image",
+                    "password": "New password"
+                }
+            }
+        }
+    },
+    "parameters": {
+        "page_size": {
+            "description": "Sets the number of items to return in paginated endpoints",
+            "name": "page_size",
+            "type": "integer",
+            "format": "int32",
+            "in": "query"
+        },
+        "page": {
+            "description": "Sets the page number for paginated endpoints",
+            "name": "page",
+            "type": "integer",
+            "format": "int32",
+            "in": "query"
+        }
+    },
+    "security": [
+        "token"
+    ],
+    "basePath": "/auth",
+    "definitions": {
+        "InstagramUserDetails": {
+            "properties": {
+                "instagram_id": {
+                    "description": "Instagram ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "TwitterSocialDetails": {
+            "properties": {
+                "raw_data": {
+                    "description": "Raw Response Data",
+                    "type": "object"
+                },
+                "email": {
+                    "description": "E-mail address",
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "description": "URL of the user's profile picture",
+                    "type": "string",
+                    "format": "url"
+                },
+                "full_name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "SocialDetails": {
+            "properties": {
+                "google": {
+                    "description": "Google Details",
+                    "$ref": "#/definitions/GoogleSocialDetails"
+                },
+                "facebook": {
+                    "description": "Facebook Details",
+                    "$ref": "#/definitions/FacebookSocialDetails"
+                },
+                "linkedin": {
+                    "description": "LinkedIn Details",
+                    "$ref": "#/definitions/LinkedInSocialDetails"
+                },
+                "github": {
+                    "description": "Github Details",
+                    "$ref": "#/definitions/GithubSocialDetails"
+                },
+                "instagram": {
+                    "description": "Instagram Details",
+                    "$ref": "#/definitions/InstagramSocialDetails"
+                },
+                "twitter": {
+                    "properties": {
+                        "raw_data": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        },
+                        "full_name": {
+                            "type": "string"
+                        },
+                        "profile_picture": {
+                            "type": "string"
+                        }
+                    },
+                    "description": "Twitter Details",
+                    "type": "object",
+                    "$ref": "#/definitions/TwitterSocialDetails"
+                }
+            },
+            "description": "Social Details",
+            "type": "object"
+        },
+        "MinimalUserDetails": {
+            "properties": {
+                "app_id": {
+                    "description": "App ID",
+                    "type": "string"
+                },
+                "uuid": {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "UserDetails": {
+            "properties": {
+                "image": {
+                    "description": "URL of a User Profile image",
+                    "type": "string",
+                    "format": "url"
+                },
+                "name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "TwitterUserDetails": {
+            "properties": {
+                "twitter_id": {
+                    "description": "Twitter ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "CustomUserDetails": {
+            "properties": {
+                "external_id": {
+                    "description": "Custom User ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "InstagramSocialDetails": {
+            "description": "",
+            "type": "object",
+            "required": [
+                "username",
+                "full_name",
+                "profile_picture"
+            ],
+            "properties": {
+                "raw_data": {
+                    "description": "Raw Response Data",
+                    "type": "object"
+                },
+                "email": {
+                    "description": "E-mail address"
+                },
+                "profile_picture": {
+                    "description": "URL of the user's profile picture",
+                    "type": "string",
+                    "format": "url"
+                },
+                "full_name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            }
+        },
+        "GoogleUserDetails": {
+            "properties": {
+                "google_id": {
+                    "description": "Google+ ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "FacebookUserDetails": {
+            "properties": {
+                "facebook_id": {
+                    "description": "Facebook ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "EmailPasswordUserDetails": {
+            "properties": {
+                "email": {
+                    "description": "E-mail address",
+                    "type": "string",
+                    "format": "email"
+                },
+                "username": {
+                    "description": "Display username",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "LinkedInSocialDetails": {
+            "properties": {
+                "raw_data": {
+                    "description": "Raw Response Data",
+                    "type": "object"
+                },
+                "email": {
+                    "description": "E-mail address",
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "description": "URL of the user's profile picture",
+                    "type": "string",
+                    "format": "url"
+                },
+                "full_name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "GithubUserDetails": {
+            "properties": {
+                "github_id": {
+                    "description": "Github ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "FacebookSocialDetails": {
+            "properties": {
+                "raw_data": {
+                    "description": "Raw Response Data",
+                    "type": "object"
+                },
+                "email": {
+                    "description": "E-mail address",
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "description": "URL of the user's profile picture",
+                    "type": "string",
+                    "format": "url"
+                },
+                "full_name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "GoogleSocialDetails": {
+            "properties": {
+                "raw_data": {
+                    "description": "Raw Response Data",
+                    "type": "object"
+                },
+                "email": {
+                    "description": "E-mail address",
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "description": "URL of the user's profile picture",
+                    "type": "string",
+                    "format": "url"
+                },
+                "full_name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "LinkedInUserDetails": {
+            "properties": {
+                "linkedin_id": {
+                    "description": "LinkedIn ID",
+                    "type": "string"
+                }
+            },
+            "description": "",
+            "type": "object"
+        },
+        "GithubSocialDetails": {
+            "description": "",
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "raw_data": {
+                    "description": "Raw Response Data",
+                    "type": "object"
+                },
+                "email": {
+                    "description": "E-mail address",
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "description": "URL of the user's profile picture",
+                    "type": "string",
+                    "format": "url"
+                },
+                "full_name": {
+                    "description": "Full Name",
+                    "type": "string"
+                }
+            }
+        },
+        "User": {
+            "properties": {
+                "details": {
+                    "description": "User Details. This object will additionally contain properties from one of the following details models: [EmailPassword](#model-emailpassworduserdetails), [Custom](#model-customuserdetails), [Facebook](#model-facebookuserdetails), [Github](#model-githubuserdetails), [Google](#model-googleuserdetails), [LinkedIn](#model-linkedinuserdetails), [Instagram](#model-instagramuserdetails), [Twitter](#model-twitteruserdetails)",
+                    "type": "string",
+                    "$ref": "#/definitions/UserDetails"
+                },
+                "custom": {
+                    "description": "Custom Data",
+                    "type": "object"
+                },
+                "app_id": {
+                    "description": "App ID",
+                    "type": "string"
+                },
+                "created": {
+                    "description": "Creation timestamp",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "social": {
+                    "type": "string",
+                    "$ref": "#/definitions/SocialDetails"
+                },
+                "uuid": {
+                    "description": "User ID",
+                    "type": "string",
+                    "format": "uuid"
+                }
+            },
+            "description": "User",
+            "type": "object"
+        }
+    },
+    "swagger": "2.0",
+    "consumes": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "token": {
+            "name": "Authorization",
+            "type": "apiKey",
+            "in": "header"
+        }
+    },
+    "mimetypes": [
+        "text/plain; charset=utf-8",
+        "application/json"
+    ],
+    "description": "User Authentication and Management",
+    "tags": []
+}

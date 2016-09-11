@@ -1,0 +1,931 @@
+{
+    "security": [
+        "token"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "host": "api.ionic.io",
+        "title": "Deploy API",
+        "version": "2.0.0-beta.0"
+    },
+    "description": "On-demand Application Deployment",
+    "mimetypes": [
+        "text/plain; charset=utf-8",
+        "application/json"
+    ],
+    "basePath": "/deploy",
+    "definitions": {
+        "AndroidVersion": {
+            "type": "object",
+            "properties": {
+                "min": {
+                    "type": "string",
+                    "format": "semver",
+                    "description": "Minimum App binary version supported"
+                },
+                "max": {
+                    "type": "string",
+                    "format": "semver",
+                    "description": "Maximum App binary version supported"
+                },
+                "eq": {
+                    "type": "string",
+                    "format": "semver",
+                    "description": "Equivalent App binary version. i.e. This version is equivalent to the binary version of the app"
+                }
+            },
+            "description": "Android Snapshot Version"
+        },
+        "Snapshot": {
+            "type": "object",
+            "required": [
+                "app_id"
+            ],
+            "properties": {
+                "android_version": {
+                    "$ref": "#/definitions/AndroidVersion"
+                },
+                "ios_version": {
+                    "$ref": "#/definitions/IOSVersion"
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Created datetime"
+                },
+                "user_metadata": {
+                    "type": "object",
+                    "description": "Custom metadata"
+                },
+                "uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Snapshot ID"
+                },
+                "app_id": {
+                    "type": "string",
+                    "maximum": 40,
+                    "description": "App ID"
+                },
+                "note": {
+                    "type": "string",
+                    "description": "Short note describing the Snapshot"
+                }
+            },
+            "description": "App Snapshot"
+        },
+        "IOSVersion": {
+            "type": "object",
+            "properties": {
+                "min": {
+                    "type": "string",
+                    "format": "semver",
+                    "description": "Minimum App binary version supported"
+                },
+                "max": {
+                    "type": "string",
+                    "format": "semver",
+                    "description": "Maximum App binary version supported"
+                },
+                "eq": {
+                    "type": "string",
+                    "format": "semver",
+                    "description": "Equivalent App binary version. i.e. This version is equivalent to the binary version of the app"
+                }
+            },
+            "description": "iOS Snapshot Version"
+        },
+        "Channel": {
+            "type": "object",
+            "required": [
+                "label",
+                "app_id"
+            ],
+            "properties": {
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Creation datetime"
+                },
+                "label": {
+                    "type": "string",
+                    "maximum": 255,
+                    "description": "Name of the channel"
+                },
+                "deploy": {
+                    "$ref": "#/definitions/Snapshot"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Unique tag used to reference the channel"
+                },
+                "uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Channel ID"
+                },
+                "app_id": {
+                    "type": "string",
+                    "description": "App ID"
+                }
+            },
+            "description": "Deploy Channel"
+        },
+        "Deploy": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "channel": {
+                    "type": "string",
+                    "description": "Channel ID"
+                },
+                "snapshot": {
+                    "type": "string",
+                    "description": "Snapshot ID"
+                },
+                "uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Deploy ID"
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Creation datetime"
+                }
+            },
+            "description": "App Deployment"
+        }
+    },
+    "securityDefinitions": {
+        "token": {
+            "in": "header",
+            "type": "apiKey",
+            "name": "Authorization"
+        }
+    },
+    "parameters": {
+        "page": {
+            "in": "query",
+            "type": "integer",
+            "format": "int32",
+            "name": "page",
+            "description": "Sets the page number for paginated endpoints"
+        },
+        "page_size": {
+            "in": "query",
+            "type": "integer",
+            "format": "int32",
+            "name": "page_size",
+            "description": "Sets the number of items to return in paginated endpoints"
+        }
+    },
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [],
+    "paths": {
+        "/snapshots": {
+            "get": {
+                "x-category": "Snapshots",
+                "security": {
+                    "token": []
+                },
+                "parameters": [
+                    {
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "in": "query",
+                        "type": "array",
+                        "name": "ids"
+                    },
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "in": "query",
+                        "items": {
+                            "enum": [
+                                "ios_version",
+                                "user_metadata",
+                                "android_version"
+                            ],
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "name": "fields",
+                        "description": "Additional Fields to return"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated listing of Snapshots",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Snapshot",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-fields": {
+                    "android_version": {
+                        "$ref": "#/definitions/AndroidVersion"
+                    },
+                    "ios_version": {
+                        "$ref": "#/definitions/IOSVersion"
+                    },
+                    "user_metadata": {
+                        "type": "object",
+                        "description": "Custom metadata"
+                    }
+                },
+                "summary": "List",
+                "description": "List App Snapshots"
+            }
+        },
+        "/channels/{channel_id}": {
+            "get": {
+                "x-category": "Channels",
+                "security": {
+                    "token": []
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "format": "uuid",
+                        "name": "channel_id",
+                        "description": "Channel ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Channel",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Channel",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieve",
+                "description": "Retrieve a single Channel"
+            },
+            "delete": {
+                "x-category": "Channels",
+                "security": {
+                    "token": []
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "format": "uuid",
+                        "name": "channel_id",
+                        "description": "Channel ID"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "summary": "Delete",
+                "description": "Delete a deploy channel"
+            },
+            "patch": {
+                "x-category": "Channels",
+                "security": {
+                    "token": []
+                },
+                "responses": {
+                    "200": {
+                        "description": "Channel",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Channel",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "required": false,
+                        "name": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "tag": {
+                                    "type": "string",
+                                    "description": "Unique tag"
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "Reference label"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "format": "uuid",
+                        "name": "channel_id",
+                        "description": "Channel ID"
+                    }
+                ],
+                "x-body": {
+                    "tag": "Unique tag",
+                    "label": "Reference label"
+                },
+                "summary": "Update",
+                "description": "Update a deploy channel"
+            }
+        },
+        "/snapshots/{snapshot_id}/download": {},
+        "/channels": {
+            "get": {
+                "x-category": "Channels",
+                "security": {
+                    "token": []
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Channel Listing",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "items": {
+                                        "$ref": "#/definitions/Channel"
+                                    },
+                                    "type": "array",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "List",
+                "description": "Paginated listing of Channels"
+            },
+            "post": {
+                "x-category": "Channels",
+                "security": {
+                    "token": []
+                },
+                "responses": {
+                    "201": {
+                        "description": "Channel",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Channel",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "required": false,
+                        "name": "body",
+                        "schema": {
+                            "required": [
+                                "label"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "tag": {
+                                    "type": "string",
+                                    "description": "Unique tag"
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "Reference label"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "x-body": {
+                    "tag": "Unique tag",
+                    "label": "Reference label"
+                },
+                "summary": "Create",
+                "description": "Create a deploy channel"
+            }
+        },
+        "/channels/{tag}": {
+            "get": {
+                "x-category": "Channels",
+                "security": {
+                    "token": []
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "name": "tag",
+                        "description": "Channel Tag"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Channel",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Channel",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieve by tag",
+                "description": "Retrieve a single Channel by it's tag"
+            }
+        },
+        "/deploys": {
+            "get": {
+                "x-category": "Deploys",
+                "security": {
+                    "token": []
+                },
+                "parameters": [
+                    {
+                        "in": "query",
+                        "type": "string",
+                        "format": "uuid",
+                        "name": "channel"
+                    },
+                    {
+                        "$ref": "#/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/parameters/page"
+                    }
+                ],
+                "x-query": {
+                    "channel": "Channel Tag. Filters deploys by the channel tag."
+                },
+                "responses": {
+                    "200": {
+                        "description": "Deploy",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "items": {
+                                        "$ref": "#/definitions/Deploy"
+                                    },
+                                    "type": "array",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "List",
+                "description": "List recent deploys"
+            },
+            "post": {
+                "x-category": "Deploys",
+                "security": {
+                    "token": []
+                },
+                "responses": {
+                    "200": {
+                        "description": "Deploy",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Deploy",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "required": false,
+                        "name": "body",
+                        "schema": {
+                            "required": [
+                                "channel",
+                                "snapshot"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "channel": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "description": "Channel ID"
+                                },
+                                "snapshot": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "description": "Snapshot ID"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "x-body": {
+                    "channel": "Channel ID",
+                    "snapshot": "Snapshot ID"
+                },
+                "summary": "Create",
+                "description": "Deploy an App Snapshot to the specified Channel"
+            }
+        },
+        "/snapshots/{snapshot_id}": {
+            "get": {
+                "x-category": "Snapshots",
+                "summary": "Retrieve",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "type": "string",
+                        "name": "app_id"
+                    },
+                    {
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "format": "uuid",
+                        "name": "snapshot_id",
+                        "description": "Snapshot ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Snapshot",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Snapshot",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Retrieve a Snapshot"
+            },
+            "patch": {
+                "x-category": "Snapshots",
+                "security": {
+                    "token": []
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Snapshot",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "description": "HTTP Response Code"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "format": "semver",
+                                            "description": "API Version"
+                                        },
+                                        "request_id": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "description": "Request Reference ID"
+                                        }
+                                    },
+                                    "description": "Response Metadata"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Snapshot",
+                                    "type": "object",
+                                    "description": "Resource Data"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "required": false,
+                        "name": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "android_version": {
+                                    "$ref": "#/definitions/AndroidVersion",
+                                    "type": "object",
+                                    "properties": {
+                                        "min": {
+                                            "type": "string"
+                                        },
+                                        "max": {
+                                            "type": "string"
+                                        },
+                                        "eq": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "ios_version": {
+                                    "$ref": "#/defintions/IOSVersion",
+                                    "type": "object",
+                                    "properties": {
+                                        "min": {
+                                            "type": "string"
+                                        },
+                                        "max": {
+                                            "type": "string"
+                                        },
+                                        "eq": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "user_metadata": {
+                                    "type": "object"
+                                },
+                                "note": {
+                                    "type": "string",
+                                    "description": "Short note describing the Snapshot"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "format": "uuid",
+                        "name": "snapshot_id",
+                        "description": "Snapshot ID"
+                    }
+                ],
+                "x-body": {
+                    "android_version": {
+                        "$ref": "#/definitions/AndroidVersion"
+                    },
+                    "ios_version": {
+                        "$ref": "#/defintions/IOSVersion"
+                    },
+                    "user_meta": {
+                        "type": "object",
+                        "description": "Custom metadata"
+                    },
+                    "note": "Short note describing the Snapshot"
+                },
+                "summary": "Update",
+                "description": "Update a Snapshot"
+            }
+        },
+        "/channels/{tag}/check-device": {},
+        "/deploys/{deploy_id}": {}
+    }
+}
