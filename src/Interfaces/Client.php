@@ -9,6 +9,7 @@ interface Client {
      * @return API
      */
     function getAPI();
+    function getDefaults($config = []);
     function __construct($config);
 
     /**

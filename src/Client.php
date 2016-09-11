@@ -33,20 +33,25 @@ class Client implements \Ionic\Interfaces\Client {
      */
     private $api;
 
-    const Defaults = [
-        'http_handler' => [
-            'class' => \Ionic\Helpers\HTTPHandler::class
-        ],
-        'route_parser' => [
-            'class' => \Ionic\API\RouteParser::class,
-            'configs' => [
-                'file' => __DIR__."/API/api.json"
+    // Prefered way to store defaults, however class arrays currently do not work in hhvm.
+    // const Defaults = [...];
+
+    function getDefaults($config = []) {
+        return array_replace_recursive([
+            'http_handler' => [
+                'class' => \Ionic\Helpers\HTTPHandler::class
+            ],
+            'route_parser' => [
+                'class' => \Ionic\API\RouteParser::class,
+                'configs' => [
+                    'file' => __DIR__."/API/api.json"
+                ]
+            ],
+            'api' => [
+                'class' => \Ionic\API\API::class
             ]
-        ],
-        'api' => [
-            'class' => \Ionic\API\API::class
-        ]
-    ];
+        ], $config);
+    }
 
     /**
      * Client constructor.
@@ -57,7 +62,7 @@ class Client implements \Ionic\Interfaces\Client {
      * - http_handler ClientInterface
      */
     function __construct($config) {
-        $config = array_replace_recursive(self::Defaults, $config);
+        $config = $this->getDefaults($config);
 
         $this->config = $config;
         $this->api_token = $config['api_token'];
