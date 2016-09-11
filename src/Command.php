@@ -3,7 +3,7 @@
 namespace Ionic;
 
 use GuzzleHttp\ClientInterface;
-use Ionic\API\Interfaces\API;
+use Ionic\API\Interfaces\API as APIInterface;
 
 class Command implements \Ionic\Interfaces\Command {
     /** @var string */
@@ -14,9 +14,9 @@ class Command implements \Ionic\Interfaces\Command {
     /**
      * @var \Ionic\Interfaces\Client
      */
-    private $handler;
+    private $client;
     /**
-     * @var API
+     * @var APIInterface
      */
     private $api;
 
@@ -29,13 +29,13 @@ class Command implements \Ionic\Interfaces\Command {
      * @param string            $name       Name of the command
      * @param array             $args       Arguments to pass to the command
      * @param ClientInterface   $handler    Handler for command
-     * @param API               $api        API
+     * @param APIInterface               $api        API
      */
-    public function __construct($name, array $args = [], ClientInterface $handler = null, API $api)
+    public function __construct($name, array $args = [], ClientInterface $handler = null, APIInterface $api)
     {
         $this->name = $name;
         $this->data = $args;
-        $this->handler = $handler;
+        $this->client = $handler;
         $this->api = $api;
     }
 
@@ -44,7 +44,7 @@ class Command implements \Ionic\Interfaces\Command {
      */
     public function resolve() {
         $request = $this->api->getRequest($this->name, $this->data);
-        $fetch = $this->handler->sendAsync($request);
+        $fetch = $this->client->sendAsync($request);
 
         $promise = $fetch->then(function ($results) {
             return $this->api->processOutput($this->name, $results);

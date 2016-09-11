@@ -3,7 +3,6 @@
 namespace Ionic\Users;
 
 use GuzzleHttp\Promise\Promise;
-use Ionic\API\RouteParser;
 use Ionic\Client;
 use Ionic\Helpers\Pagination;
 use Ionic\Users\Models\User;
@@ -20,10 +19,16 @@ use Ionic\Users\Models\User;
  */
 class UsersClient extends Client {
 
+    const UserDefaults = [
+        'route_parser' => [
+            'configs' => [
+                'version' => '2.0.0-beta.0',
+                'client' => 'users'
+            ]
+        ]
+    ];
     function __construct($config) {
-        if (empty($config['route_parser'])) {
-            $config['route_parser'] = new RouteParser(["file" => __DIR__."/../API/versions/2.0.0-beta.0/users.api.json"]);
-        }
+        $config = array_replace_recursive(self::UserDefaults, $config);
         parent::__construct($config);
     }
 

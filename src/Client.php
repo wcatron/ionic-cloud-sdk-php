@@ -2,10 +2,10 @@
 
 namespace Ionic;
 
-use Ionic\API\API;
-use Ionic\API\RouteParser;
+use GuzzleHttp\ClientInterface;
+use Ionic\API\Interfaces\API;
 use GuzzleHttp\Promise\Promise;
-use Ionic\Helpers\HttpHandler;
+use Ionic\API\Interfaces\RouteParser;
 
 /**
  * @method mixed test()
@@ -13,34 +13,84 @@ use Ionic\Helpers\HttpHandler;
 class Client implements \Ionic\Interfaces\Client {
     private $config;
     /**
-     * @var HttpHandler
+     * @var ClientInterface
      */
     public $handler;
+    /**
+     * @var string
+     */
     private $api_token;
+    /**
+     * @var string
+     */
     public $app_id;
-    public $api;
+    /**
+     * @var RouteParser
+     */
+    private $route_parser;
+    /**
+     * @var API
+     */
+    private $api;
 
+    const Defaults = [
+        'http_handler' => [
+            'class' => \Ionic\Helpers\HTTPHandler::class
+        ],
+        'route_parser' => [
+            'class' => \Ionic\API\RouteParser::class,
+            'configs' => [
+                'file' => __DIR__."/API/api.json"
+            ]
+        ],
+        'api' => [
+            'class' => \Ionic\API\API::class
+        ]
+    ];
+
+    /**
+     * Client constructor.
+     * @param $config
+     * Configuration array with the following options:
+     * - api_token string required Ionic Cloud API token. TODO: Get url to link to documentation to get this.
+     * - app_id string required Ionic Cloud App ID
+     * - http_handler ClientInterface
+     */
     function __construct($config) {
+        $config = array_replace_recursive(self::Defaults, $config);
+
         $this->config = $config;
         $this->api_token = $config['api_token'];
         $this->app_id = $config['app_id'];
-        if (empty($config['http_handler'])) {
-            $this->handler = new HttpHandler(
+
+        if (is_object($config['http_handler'])) {
+            $this->handler = $config['http_handler'];
+        } else if (is_array($config['http_handler'])) {
+            $class = $config['http_handler']['class'];
+            $this->handler = new $class(
                 [
                     'api_token' => $this->api_token
                 ]);
-        } else {
-            $this->handler = $config['http_handler'];
         }
 
-        // TODO: Clean up and document route parser and api configuration options.
-        if (empty($config['route_parser'])) {
-            $config['route_parser'] = new RouteParser(["file" => __DIR__."/API/api.json"]);
+        if (is_object($config['route_parser'])) {
+            $this->route_parser = $config['route_parser'];
+        } else if (is_array($config['route_parser'])) {
+            $class = $config['route_parser']['class'];
+            $this->route_parser = new $class($config['route_parser']['configs']);
         }
-        if (empty($config['api'])) {
-            $config['api'] = new API($config['route_parser']->parse());
+
+        if (is_object($config['api'])) {
+            $this->api = $config['api'];
+        } else if (is_array($config['api'])) {
+            $class = $config['api']['class'];
+            if (empty($this->route_parser)) {
+                throw new \InvalidArgumentException('Must provide route_parser or class for route_parser in config when using the api class config.');
+            }
+            $this->api = new $class($this->route_parser->parse());
+        } else {
+            throw new \InvalidArgumentException('Must provide api or class for api in config.');
         }
-        $this->api = $config['api'];
     }
 
     /**
@@ -49,7 +99,11 @@ class Client implements \Ionic\Interfaces\Client {
      * @return
      */
     public function getCommand($name, array $args = [ ]) {
-        return new \Ionic\Command($name, $args, $this->handler, $this->api);
+        return new Command($name, $args, $this->handler, $this->api);
+    }
+
+    public function getAPI() {
+        return $this->api;
     }
 
     /**

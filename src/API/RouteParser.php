@@ -19,10 +19,10 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
     function parse($routes = null) {
         if (empty($routes)) {
             // TODO: Determine if this should be checked in the constructor.
-            if (!empty($this->config['file'])) {
-                $routes = json_decode(file_get_contents($this->config['file']), true)['routes'];
-            } else if (!empty($this->config['version']) && !empty($this->config['client'])) {
+            if (!empty($this->config['version']) && !empty($this->config['client'])) {
                 $routes = json_decode(file_get_contents(__DIR__.'/versions/'.$this->config['version'].'/'.$this->config['client'].'.api.json'), true)['routes'];
+            } else if (!empty($this->config['file'])) {
+                $routes = json_decode(file_get_contents($this->config['file']), true)['routes'];
             } else {
                 throw new \InvalidArgumentException("`file` or `version` and `client` needed in route parser config.");
             }

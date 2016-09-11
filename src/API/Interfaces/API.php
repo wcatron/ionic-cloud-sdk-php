@@ -2,21 +2,21 @@
 
 namespace Ionic\API\Interfaces;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 interface API {
     /**
      * @param string $name
      * @param mixed $params
-     * @return Request
+     * @return RequestInterface
      */
     function getRequest($name, $params);
 
     /**
      * @param string         $name
-     * @param Response $results
+     * @param ResponseInterface $results
      * @return mixed
      */
-    function processOutput($name, Response $results);
+    function processOutput($name, ResponseInterface $results);
 }

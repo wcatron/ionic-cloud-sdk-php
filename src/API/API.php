@@ -2,11 +2,9 @@
 
 namespace Ionic\API;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Uri;
 use Ionic\API\Interfaces\Route as RouteInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class API implements \Ionic\API\Interfaces\API {
     /**
@@ -33,10 +31,10 @@ class API implements \Ionic\API\Interfaces\API {
 
     /**
      * @param string         $name
-     * @param Response $results
+     * @param ResponseInterface $results
      * @return callable
      */
-    function processOutput($name, Response $results) {
+    function processOutput($name, ResponseInterface $results) {
         return $this->routes[$name]->process($results);
     }
 

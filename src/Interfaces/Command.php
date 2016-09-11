@@ -2,11 +2,11 @@
 
 namespace Ionic\Interfaces;
 
-use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\PromiseInterface;
 
 interface Command {
     /**
-     * @return Promise
+     * @return PromiseInterface
      */
     function resolve();
 }
