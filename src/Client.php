@@ -44,7 +44,8 @@ class Client implements \Ionic\Interfaces\Client {
             'route_parser' => [
                 'class' => \Ionic\API\RouteParser::class,
                 'configs' => [
-                    'file' => __DIR__."/API/api.json"
+                    'version' => '2.0.0-beta.0',
+                    'client' => 'base'
                 ]
             ],
             'api' => [
