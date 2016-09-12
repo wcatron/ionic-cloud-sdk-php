@@ -68,7 +68,7 @@ class Client implements \Ionic\Interfaces\Client {
         $this->api_token = required('api_token', $config);
         $this->app_id = required('app_id', $config);
 
-        if (is_object($config['http_handler'])) {
+        if (is_object($config['http_handler']) && $config['http_handler'] instanceof ClientInterface) {
             $this->handler = $config['http_handler'];
         } else if (is_array($config['http_handler'])) {
             $class = $config['http_handler']['class'];
@@ -81,7 +81,7 @@ class Client implements \Ionic\Interfaces\Client {
             required('http_handler', $config, 'Must provide HTTPHandler or Class for `{param}` in config.');
         }
 
-        if (is_object($config['route_parser'])) {
+        if (is_object($config['route_parser']) && $config['route_parser'] instanceof RouteParser) {
             $this->route_parser = $config['route_parser'];
         } else if (is_array($config['route_parser'])) {
             $class = $config['route_parser']['class'];
@@ -90,7 +90,7 @@ class Client implements \Ionic\Interfaces\Client {
             unset($config['route_parser']);
         }
 
-        if (is_object($config['api'])) {
+        if (is_object($config['api']) && $config['api'] instanceof API) {
             $this->api = $config['api'];
         } else if (is_array($config['api'])) {
             $class = $config['api']['class'];
