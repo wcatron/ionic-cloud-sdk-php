@@ -10,8 +10,13 @@ use Ionic\Helpers\HttpHandler;
 class HttpHandlerTest extends PHPUnit_Framework_TestCase {
     /**
      * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage api_token is required in configs.
      */
     function testConfigException () {
         $handler = new HttpHandler([]);
+    }
+
+    function testConfigComplete() {
+        $handler = new HttpHandler(['api_token' => 'XXX']);
     }
 }

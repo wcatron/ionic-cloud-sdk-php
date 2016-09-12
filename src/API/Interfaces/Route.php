@@ -2,18 +2,18 @@
 
 namespace Ionic\API\Interfaces;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 interface Route {
     /**
      * @param $params
-     * @return Request
+     * @return RequestInterface
      */
     function call($params);
 
     /**
-     * @param Response $results
+     * @param ResponseInterface $results
      * @return mixed
      */
     function process($results);

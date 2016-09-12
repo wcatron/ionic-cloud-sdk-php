@@ -65,8 +65,8 @@ class Client implements \Ionic\Interfaces\Client {
         $config = $this->getDefaults($config);
 
         $this->config = $config;
-        $this->api_token = $config['api_token'];
-        $this->app_id = $config['app_id'];
+        $this->api_token = required('api_token', $config);
+        $this->app_id = required('app_id', $config);
 
         if (is_object($config['http_handler'])) {
             $this->handler = $config['http_handler'];
@@ -76,6 +76,9 @@ class Client implements \Ionic\Interfaces\Client {
                 [
                     'api_token' => $this->api_token
                 ]);
+        } else {
+            unset($config['http_handler']);
+            required('http_handler', $config, 'Must provide HTTPHandler or Class for `{param}` in config.');
         }
 
         if (is_object($config['route_parser'])) {
@@ -83,26 +86,22 @@ class Client implements \Ionic\Interfaces\Client {
         } else if (is_array($config['route_parser'])) {
             $class = $config['route_parser']['class'];
             $this->route_parser = new $class($config['route_parser']['configs']);
+        } else {
+            unset($config['route_parser']);
         }
 
         if (is_object($config['api'])) {
             $this->api = $config['api'];
         } else if (is_array($config['api'])) {
             $class = $config['api']['class'];
-            if (empty($this->route_parser)) {
-                throw new \InvalidArgumentException('Must provide route_parser or class for route_parser in config when using the api class config.');
-            }
+            required('route_parser', $config, 'Must provide RouteParser object or class for `{param}` in config when using the api[class] configuration method.');
             $this->api = new $class($this->route_parser->parse());
         } else {
-            throw new \InvalidArgumentException('Must provide api or class for api in config.');
+            unset($config['api']);
+            required('api', $config, 'Must provide API object or Class for `{param}` in config.');
         }
     }
 
-    /**
-     * @param       $name
-     * @param array $args
-     * @return
-     */
     public function getCommand($name, array $args = [ ]) {
         return new Command($name, $args, $this->handler, $this->api);
     }
@@ -124,5 +123,6 @@ class Client implements \Ionic\Interfaces\Client {
             $promise = call_user_func_array([$this, $name.'Async'], $arguments);
             return $promise->wait();
         }
+        throw new \BadMethodCallException();
     }
 }

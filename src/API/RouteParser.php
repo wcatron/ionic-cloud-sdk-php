@@ -8,6 +8,7 @@ namespace Ionic\API;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\ResponseInterface;
 
 class RouteParser implements \Ionic\API\Interfaces\RouteParser {
     public $config;
@@ -35,7 +36,7 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
     function makeRoute($route) {
         return new Route(function ($params) use ($route) {
             return self::createRequest($route, $params);;
-        }, function (Response $response) use ($route) {
+        }, function (ResponseInterface $response) use ($route) {
             $output = $route['output'];
             return $this->parseOutput($response, $output);
         });

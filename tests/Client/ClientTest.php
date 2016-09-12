@@ -1,6 +1,7 @@
 <?php
 
 use GuzzleHttp\Psr7\Response;
+use Ionic\API\Interfaces\API;
 use Ionic\Client;
 use Ionic\Helpers\Pagination;
 use Ionic\Test\TestingClient;
@@ -46,6 +47,49 @@ class ClientTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(3, count($response));
         $user = $userClient->getUser('c4c0eac7-a20f-4f57-aa63-9fbcebe7513a');
         $this->assertEquals('c4c0eac7-a20f-4f57-aa63-9fbcebe7513a', $user->uuid);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Must provide API object or Class for `api` in config.
+     */
+    function testBadAPIConfig() {
+        $this->getTestClientWithResponses([], Client::class, [
+            'api' => 'Invalid Argument - strings are not allowed.'
+        ]);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Must provide RouteParser object or class for `route_parser` in config when using the api[class] configuration method.
+     */
+    function testBadRouteParserConfig() {
+        $this->getTestClientWithResponses([],Client::class, [
+            'route_parser' => 'Invalid Argument - strings are not allowed.'
+        ]);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Must provide HTTPHandler or Class for `http_handler` in config.
+     */
+    function testBadHTTPHandlerConfig() {
+        $this->getTestClientWithResponses([],Client::class, [
+            'http_handler' => 'Invalid Argument - strings are not allowed.'
+        ]);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    function testBadFunctionCall() {
+        $client = $this->getTestClientWithResponses([]);
+        $response = $client->badMagicCall();
+    }
+
+    function testGetAPI() {
+        $client = $this->getTestClientWithResponses([]);
+        $this->assertTrue($client->getAPI() instanceof API);
     }
 
 }
