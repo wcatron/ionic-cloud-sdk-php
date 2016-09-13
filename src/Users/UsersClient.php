@@ -2,9 +2,11 @@
 
 namespace Ionic\Users;
 
+use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\Promise;
 use Ionic\Client;
 use Ionic\Helpers\Pagination;
+use Ionic\Users\Models\EmailPasswordUserDetails;
 use Ionic\Users\Models\User;
 
 /**
@@ -15,7 +17,7 @@ use Ionic\Users\Models\User;
  * @method User updateUser(User $user)
  * @method void deleteUser(string $uuid)
  * @method mixed getCustomData(string $uuid)
- * @method mixed updateCustomData(string $uuid, mixed $data)
+ * @method mixed setCustomData(string $uuid, mixed $data)
  */
 class UsersClient extends Client {
 
@@ -61,7 +63,21 @@ class UsersClient extends Client {
      * @return Promise
      */
     function createUserAsync(User $user) {
-        // TODO: Implement create user.
+        /** @var EmailPasswordUserDetails $details */
+        $details = $user->details;
+        if (!($details instanceof EmailPasswordUserDetails)) {
+            throw new \InvalidArgumentException("User details must be of type EmailPasswordUserDetails for creating a user. All other types are created when the user logins in the first time.");
+        }
+        $params = [
+            "name" => $details->name,
+            "app_id" => $this->app_id,
+            "username" => $details->username,
+            "password" => $details->password,
+            "email" => $details->email,
+            "custom" => $user->custom,
+            "image" => $user->details->image
+        ];
+        return $this->getCommand('createUser', $params)->resolve();
     }
 
     /**
@@ -77,7 +93,11 @@ class UsersClient extends Client {
      * @return Promise
      */
     function updateUserAsync($user) {
-        // TODO: Implement update user.
+        $changed = $user->getChangedValues();
+        if (count($changed) == 0) {
+            throw new \Exception("No changes were made to the user. If you make a change you have to record it by calling setChanged() on the object.");
+        }
+        return $this->getCommand('updateUser', array_merge(['user_uuid' => $user->uuid], $changed))->resolve();
     }
 
     /**
@@ -101,8 +121,8 @@ class UsersClient extends Client {
      * @param mixed  $data
      * @return Promise
      */
-    function updateCustomDataAsync($uuid, $data) {
-        return $this->getCommand('updateCustomData', [ 'user_uuid' => $uuid, 'data' => $data ])->resolve();
+    function setCustomDataAsync($uuid, $data) {
+        return $this->getCommand('setCustomData', [ 'user_uuid' => $uuid, 'data' => $data ])->resolve();
     }
 
 }

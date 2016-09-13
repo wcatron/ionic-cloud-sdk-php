@@ -1,0 +1,9 @@
+{
+    "data": {
+        "key": "value",
+        "foo": {
+            "fee": "fi",
+            "fo": "fum"
+        }
+    }
+}

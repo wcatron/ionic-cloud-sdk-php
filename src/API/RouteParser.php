@@ -59,11 +59,14 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
                 $catchall = $parameter;
                 continue;
             }
-            if ($parameter->required) {
-                if (!isset($params[$parameter->name])) {
+            if (empty($params[$parameter->name])) {
+                if ($parameter->required) {
                     throw new \InvalidArgumentException("Request requires `$parameter->name` parameter.");
+                } else {
+                    continue;
                 }
             }
+
             switch ($parameter->in) {
                 case "path":
                     $request_uri = str_replace("{{$parameter->name}}", $params[$parameter->name], $request_uri);
@@ -95,16 +98,14 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
             $uri = $uri->withQuery(http_build_query($query_params));
         }
 
-        $options = [];
-        if (!empty($body_params)) {
-            $options = ["json" => $body_params];
-        }
-
         $request = new Request(
             $route['http']['method'],
-            $uri,
-            $options
-        );
+            $uri);
+
+        if (!empty($body_params)) {
+            $stream = \GuzzleHttp\Psr7\stream_for(json_encode($body_params));
+            $request = $request->withBody($stream)->withHeader('Content-Type', 'application/json');
+        }
 
         return $request;
     }
@@ -128,7 +129,7 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
             $class = $config['object'];
             return new $class($response['data']);
         } else if (isset($config['json'])) {
-            return (is_string($response)) ? json_decode($response, true) : $response;
+            return (is_string($response)) ? json_decode($response, true)['data'] : $response['data'];
         }
         throw new \Exception('Unknown output option.');
     }

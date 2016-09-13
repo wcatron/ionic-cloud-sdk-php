@@ -28,19 +28,20 @@ class Parameter {
 
     static function parseDefinitionToParameters($definition, &$parameters) {
         if (isset($definition['schema'])) {
-            self::parseSchemaToParameters($definition['schema'], $parameters);
+            self::parseSchemaToParameters($definition, $parameters);
         } else {
             $parameter = new Parameter($definition);
             array_push($parameters, $parameter);
         }
     }
 
-    static private function parseSchemaToParameters($schema, &$parameters) {
+    static private function parseSchemaToParameters($definition, &$parameters) {
+        $schema = $definition['schema'];
         if ($schema['type'] == "object") {
             foreach ($schema['properties'] as $param => $property_info) {
                 $parameter = new Parameter($property_info);
                 $parameter->name = $param;
-                $parameter->in = $schema['in'];
+                $parameter->in = $definition['in'];
                 array_push($parameters, $parameter);
             }
         }

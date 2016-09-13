@@ -31,10 +31,68 @@ class User {
     function __construct($array = null) {
         if ($array) {
             $this->app_id = $array['app_id'];
-            $this->created = $array['created'];
+            $this->created = \DateTime::createFromFormat('c', $array['created']);
             $this->custom = empty($array['custom']) ? null : $array['custom'];
             $this->details = new UserDetails($array['details']);
             $this->uuid = $array['uuid'];
         }
+    }
+
+    function getChangedValues() {
+        $map = [
+            "custom" => function () {
+                return $this->custom;
+            },
+            "email" => function () {
+                /** @var EmailPasswordUserDetails $details */
+                $details = $this->details;
+                return $details->email;
+            },
+            "image" => function () {
+                return $this->details->image;
+            },
+            "name" => function () {
+                return $this->details->name;
+            },
+            "password" => function () {
+                /** @var EmailPasswordUserDetails $details */
+                $details = $this->details;
+                return $details->password;
+            },
+            "username" => function () {
+                /** @var EmailPasswordUserDetails $details */
+                $details = $this->details;
+                return $details->username;
+            }
+        ];
+
+        $values = [];
+
+        foreach ($this->changed as $key) {
+            if (!isset($map[$key])) {
+                throw new \Exception("Can't update $key.");
+            }
+            $values[$key] = $map[$key]();
+        }
+
+        return $values;
+    }
+
+    static function withEmailPassword($email, $password) {
+        $details = new EmailPasswordUserDetails();
+        $details->email = $email;
+        $details->password = $password;
+        $user = new static();
+        $user->details = $details;
+        return $user;
+    }
+
+    private $changed = [];
+
+    /**
+     * @param $changed string The key for the changed value. Changeable values are name, email, image, password, custom, and username.
+     */
+    function setChanged($changed) {
+        array_push($this->changed, $changed);
     }
 }

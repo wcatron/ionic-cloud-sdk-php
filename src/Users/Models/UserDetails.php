@@ -2,6 +2,10 @@
 
 namespace Ionic\Users\Models;
 
+/**
+ * Class UserDetails
+ * @package Ionic\Users\Models
+ */
 class UserDetails {
     var $image;
     var $name;
