@@ -108,6 +108,14 @@ class UsersClientTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals("New Name", $user->details->name);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    function testBadKey() {
+        $user = new User();
+        $user->setChanged('badKey');
+    }
+
     function testDeleteUser() {
         $response = new Response(200, [ ], file_get_contents(__DIR__ . '/../responses/user.delete.json'));
         /** @var UsersClient $client */

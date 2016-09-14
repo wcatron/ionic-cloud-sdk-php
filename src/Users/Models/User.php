@@ -93,8 +93,13 @@ class User {
 
     /**
      * @param $changed string The key for the changed value. Changeable values are name, email, image, password, custom, and username.
+     * @throws \InvalidArgumentException Thrown if changed key is not valid.
      */
     function setChanged($changed) {
-        array_push($this->changed, $changed);
+        if (in_array($changed, ["name", "email", "image", "password", "custom", "username"])) {
+            array_push($this->changed, $changed);
+            return;
+        }
+        throw new \InvalidArgumentException("Can't update $changed.");
     }
 }
