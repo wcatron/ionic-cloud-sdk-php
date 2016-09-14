@@ -56,6 +56,18 @@ class UsersClientTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(isset($new_user->uuid));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage User details must be of type EmailPasswordUserDetails for creating a user. All other types are created when the user logins in the first time.
+     */
+    function testCreateUserFail() {
+        /** @var UsersClient $client */
+        $client = $this->getTestClientWithResponses([], UsersClient::class);
+        $user = new User();
+        $user->details->name = "Full name";
+        $client->createUser($user);
+    }
+
     function testGetUser() {
         $response = new Response(200, [ ], file_get_contents(__DIR__ . '/../responses/user.get.json'));
         /** @var UsersClient $client */

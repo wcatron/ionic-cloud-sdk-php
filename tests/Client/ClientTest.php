@@ -78,4 +78,12 @@ class ClientTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($client->getAPI() instanceof API);
     }
 
+    /**
+     * @expectedException \Ionic\Exceptions\AuthorizationException
+     */
+    function testClientRequestAuthFail() {
+        $client = self::createTestClient(Client::class, ['test.fail.json'], [401]);
+        $client->test();
+    }
+
 }

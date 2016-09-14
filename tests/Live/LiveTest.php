@@ -5,11 +5,16 @@ use Ionic\Helpers\Pagination;
 use Ionic\Users\Models\User;
 use Ionic\Users\UsersClient;
 
+const LiveTests = false;
+
 class LiveTest extends PHPUnit_Framework_TestCase {
     var $config;
     function setUp() {
         $config = parse_ini_file(__DIR__.'/../config.ini');
-        if (empty($config) || false) {
+        if (LiveTests == false) {
+            $this->markTestSkipped("Skipping live tests. That's okay, it should only be used to determine test results.");
+        }
+        if (empty($config)) {
             $this->markTestSkipped("config.ini file not found so assuming you don't want to test against the real API. That's okay, it should only be used to determine test results.");
         }
         $this->config = $config;
@@ -56,5 +61,13 @@ class LiveTest extends PHPUnit_Framework_TestCase {
         $user->setChanged('name');
         $user = $userClient->updateUser($user);
         $this->assertEquals($new_name, $user->details->name);
+    }
+
+    /**
+     * @expectedException \Ionic\Exceptions\AuthorizationException
+     */
+    function testBadAPI() {
+        $client = new Client(['api_token' => 'BADTOKEN','app_id' => 'Fake']);
+        $client->test();
     }
 }

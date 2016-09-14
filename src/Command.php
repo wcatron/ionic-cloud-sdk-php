@@ -3,7 +3,10 @@
 namespace Ionic;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use Ionic\API\Interfaces\API as APIInterface;
+use Ionic\Exceptions\AuthorizationException;
 
 class Command implements \Ionic\Interfaces\Command {
     /** @var string */
@@ -48,6 +51,11 @@ class Command implements \Ionic\Interfaces\Command {
 
         $promise = $fetch->then(function ($results) {
             return $this->api->processOutput($this->name, $results);
+        }, function (RequestException $error) {
+            if ($error->getCode() == 401) {
+                throw new AuthorizationException("Unauthorized bad request or bad api_token in Client configuration.", 401, $error);
+            }
+            throw $error;
         });
         return $promise;
     }

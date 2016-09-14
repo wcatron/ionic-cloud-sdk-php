@@ -1,0 +1,10 @@
+{
+    "error": {
+        "message": "JWT decode error occurred.",
+        "link": null,
+        "type": "Unauthorized"
+    },
+    "meta": {
+        "version": "2.0.0-beta"
+    }
+}

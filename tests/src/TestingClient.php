@@ -2,8 +2,12 @@
 
 namespace Ionic\Test;
 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Ionic\Client;
 
 trait TestingClient {
@@ -12,8 +16,8 @@ trait TestingClient {
      * @param $clientClass
      * @return Client
      */
-    function getTestClientWithResponse($response, $clientClass = Client::class, $config = []) {
-        return $this->getTestClientWithResponses([ $response ], $clientClass, $config);
+    static function getTestClientWithResponse($response, $clientClass = Client::class, $config = []) {
+        return static::getTestClientWithResponses([ $response ], $clientClass, $config);
     }
 
     /**
@@ -21,7 +25,7 @@ trait TestingClient {
      * @param $clientClass
      * @return Client
      */
-    function getTestClientWithResponses($responses, $clientClass = Client::class, $config = []) {
+    static function getTestClientWithResponses($responses, $clientClass = Client::class, $config = []) {
         $mock = new MockHandler($responses);
         $handler = new HandlerStack($mock);
         $mockClient = new \GuzzleHttp\Client([ 'handler' => $handler ]);
@@ -32,5 +36,26 @@ trait TestingClient {
                 'api_token'    => 'XXXXX',
                 'app_id'       => 'XXXXX'
             ], $config));
+    }
+
+    static function createTestClient($clientClass, $responseFiles = [], $responseCodes = []) {
+        $responses = [];
+        foreach ($responseFiles as $index => $responseFile) {
+            $code = $responseCodes[$index];
+            $data = json_encode(file_get_contents(__DIR__.'/../responses/'.$responseFile));
+            $response = new Response($responseCodes[$index],
+                                     [],
+                                     $data);
+            if ($code < 300) {
+                array_push($responses,
+                           $response);
+            } else {
+                $exception = new RequestException("Error...", new Request('GET','/error'), $response);
+
+                array_push($responses, $exception);
+            }
+
+        }
+        return static::getTestClientWithResponses($responses, $clientClass);
     }
 }

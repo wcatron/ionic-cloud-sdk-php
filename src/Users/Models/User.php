@@ -14,7 +14,7 @@ class User {
     /**
      * @var mixed
      */
-    var $custom;
+    var $custom = [];
     /**
      * @var UserDetails
      */
@@ -35,6 +35,8 @@ class User {
             $this->custom = empty($array['custom']) ? null : $array['custom'];
             $this->details = new UserDetails($array['details']);
             $this->uuid = $array['uuid'];
+        } else {
+            $this->details = new UserDetails();
         }
     }
 
