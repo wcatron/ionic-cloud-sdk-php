@@ -92,6 +92,22 @@ class UsersClientTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals("New Name", $user->details->name);
     }
 
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage No changes were made to the user. If you make a change you have to record it by calling setChanged() on the object.
+     */
+    function testUpdateUserNoChange() {
+        $client = $this->getTestClientWithResponses(
+            [
+                new Response(200, [ ], file_get_contents(__DIR__ . '/../responses/user.get.json')),
+                new Response(200, [ ], file_get_contents(__DIR__ . '/../responses/user.update.json'))
+            ], UsersClient::class);
+        $user = $client->getUser('A');
+        $user->details->name = "New Name";
+        $user = $client->updateUser($user);
+        $this->assertEquals("New Name", $user->details->name);
+    }
+
     function testDeleteUser() {
         $response = new Response(200, [ ], file_get_contents(__DIR__ . '/../responses/user.delete.json'));
         /** @var UsersClient $client */
