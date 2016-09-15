@@ -16,9 +16,17 @@ class EmailPasswordUserDetails extends UserDetails {
 
     function __construct($array = null) {
         if ($array) {
-            $this->email = $array['email'];
-            $this->username = $array['username'];
+            if (isset($array['email'])) {
+                $this->email = $array['email'];
+            }
+            if (isset($array['username'])) {
+                $this->username = $array['username'];
+            }
         }
         parent::__construct($array);
+    }
+
+    static function isType($array) {
+        return (isset($array['email']) || isset($array['username']));
     }
 }

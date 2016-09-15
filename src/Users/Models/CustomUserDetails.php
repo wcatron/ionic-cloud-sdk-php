@@ -2,15 +2,14 @@
 
 namespace Ionic\Users\Models;
 
-class GithubUserDetails extends UserDetails {
-    var $github_id;
-
+class CustomUserDetails extends UserDetails {
+    var $external_id;
     function __construct(array $array) {
-        $this->github_id = $array['github_id'];
+        $this->external_id = $array['external_id'];
         parent::__construct($array);
     }
 
     static function isType($array) {
-        return isset($array['github_id']);
+        return isset($array['external_id']);
     }
 }

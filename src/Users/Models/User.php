@@ -31,9 +31,10 @@ class User {
     function __construct($array = null) {
         if ($array) {
             $this->app_id = $array['app_id'];
-            $this->created = \DateTime::createFromFormat('c', $array['created']);
+
+            $this->created = new \DateTime($array['created']);
             $this->custom = empty($array['custom']) ? null : $array['custom'];
-            $this->details = new UserDetails($array['details']);
+            $this->details = UserDetails::createFromArray($array['details']);
             $this->uuid = $array['uuid'];
         } else {
             $this->details = new UserDetails();
