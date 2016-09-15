@@ -93,9 +93,9 @@ class UsersClient extends Client {
      * @return Promise
      */
     function updateUserAsync($user) {
-        $changed = $user->getChangedValues();
+        $changed = $user->changes();
         if (count($changed) == 0) {
-            throw new \Exception("No changes were made to the user. If you make a change you have to record it by calling setChanged() on the object.");
+            throw new \Exception("No changes were made to the user.");
         }
         return $this->getCommand('updateUser', array_merge(['user_uuid' => $user->uuid], $changed))->resolve();
     }

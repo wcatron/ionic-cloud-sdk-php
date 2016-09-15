@@ -2,7 +2,10 @@
 
 namespace Ionic\Users\Models;
 
-class User {
+use Ionic\Helpers\Changable;
+
+/** @property mixed custom */
+class User implements Changable {
     /**
      * @var string
      */
@@ -14,7 +17,7 @@ class User {
     /**
      * @var mixed
      */
-    var $custom = [];
+    private $custom = [];
     /**
      * @var UserDetails
      */
@@ -31,7 +34,6 @@ class User {
     function __construct($array = null) {
         if ($array) {
             $this->app_id = $array['app_id'];
-
             $this->created = new \DateTime($array['created']);
             $this->custom = empty($array['custom']) ? null : $array['custom'];
             $this->details = UserDetails::createFromArray($array['details']);
@@ -39,46 +41,6 @@ class User {
         } else {
             $this->details = new UserDetails();
         }
-    }
-
-    function getChangedValues() {
-        $map = [
-            "custom" => function () {
-                return $this->custom;
-            },
-            "email" => function () {
-                /** @var EmailPasswordUserDetails $details */
-                $details = $this->details;
-                return $details->email;
-            },
-            "image" => function () {
-                return $this->details->image;
-            },
-            "name" => function () {
-                return $this->details->name;
-            },
-            "password" => function () {
-                /** @var EmailPasswordUserDetails $details */
-                $details = $this->details;
-                return $details->password;
-            },
-            "username" => function () {
-                /** @var EmailPasswordUserDetails $details */
-                $details = $this->details;
-                return $details->username;
-            }
-        ];
-
-        $values = [];
-
-        foreach ($this->changed as $key) {
-            if (!isset($map[$key])) {
-                throw new \Exception("Can't update $key.");
-            }
-            $values[$key] = $map[$key]();
-        }
-
-        return $values;
     }
 
     static function withEmailPassword($email, $password) {
@@ -90,17 +52,24 @@ class User {
         return $user;
     }
 
-    private $changed = [];
+    private $changes = [];
+    function changes() {
+        return array_merge($this->changes, $this->details->changes());
+    }
 
-    /**
-     * @param $changed string The key for the changed value. Changeable values are name, email, image, password, custom, and username.
-     * @throws \InvalidArgumentException Thrown if changed key is not valid.
-     */
-    function setChanged($changed) {
-        if (in_array($changed, ["name", "email", "image", "password", "custom", "username"])) {
-            array_push($this->changed, $changed);
-            return;
+    function __set($name, $value) {
+        if ($name == "custom") {
+            $this->custom = $value;
+            $this->changes["custom"] = $value;
+            return $this;
         }
-        throw new \InvalidArgumentException("Can't update $changed.");
+        throw new \InvalidArgumentException("Can't change $name.");
+    }
+
+    function __get($name) {
+        if ($name == "custom") {
+            return $this->custom;
+        }
+        throw new \InvalidArgumentException("No such property $name.");
     }
 }

@@ -16,23 +16,6 @@ use Ionic\Users\Models\UserDetails;
  * Time: 12:04 PM
  */
 class UserDetailsTest extends PHPUnit_Framework_TestCase {
-    function testCreateDetails() {
-        $user = new User(
-            [
-                "app_id"  => "XXX",
-                "details" => [
-                    "name"  => "Sample Name",
-                    "image" => "",
-                    "email" => "email@email.com"
-                ],
-                "created" => "2016-09-07T16:44:42Z",
-                "uuid"    => "A"
-            ]);
-        $this->assertEquals("XXX", $user->app_id);
-        $this->assertEquals("2016-09-07T16:44:42+00:00", $user->created->format('c'));
-        $this->assertEquals("A", $user->uuid);
-    }
-
     function testCreateFacebookUser() {
         $user = new User(
             [

@@ -1,14 +1,17 @@
 <?php
 
 namespace Ionic\Users\Models;
+use Ionic\Helpers\Changable;
 
 /**
  * Class UserDetails
  * @package Ionic\Users\Models
+ * @property string name
+ * @property string image
  */
-class UserDetails {
-    var $image;
-    var $name;
+class UserDetails implements Changable {
+    private $image;
+    private $name;
 
     function __construct($array = []) {
         if (!empty($array)) {
@@ -47,5 +50,22 @@ class UserDetails {
      */
     static function isType($array) {
         return true;
+    }
+
+    protected $changes = [];
+
+    function changes() {
+        return $this->changes;
+    }
+
+    function __set($name, $value) {
+        if ($this->$name != $value) {
+            $this->$name = $value;
+            $this->changes[$name] = $value;
+        }
+    }
+
+    function __get($name) {
+        return $this->$name;
     }
 }

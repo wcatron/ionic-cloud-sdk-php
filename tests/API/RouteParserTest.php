@@ -5,6 +5,7 @@ use GuzzleHttp\Psr7\Response;
 use Ionic\API\Interfaces\RouteParser;
 use Ionic\API\Route;
 use Ionic\Client;
+use Ionic\Interfaces\Command;
 use Ionic\Test\TestingClient;
 use Psr\Http\Message\ResponseInterface;
 
@@ -35,6 +36,36 @@ class RouteParserTest extends PHPUnit_Framework_TestCase {
                                  'app_id' => 'XXX',
                                  'api_token' => 'XXX'
                              ]);
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Version a.b.c-alpha does not exist or client base is wrong.
+     */
+    function testInvalidVersion() {
+        $client = new Client([
+                                 'route_parser' => [
+                                    'configs' => [
+                                        'version' => 'a.b.c-alpha',
+                                        'client' => 'base'
+                                    ]
+                                 ],
+                                 'app_id' => 'XXX',
+                                 'api_token' => 'XXX'
+                             ]);
+    }
+
+    function testParseFromFile() {
+        $client = new Client([
+                                 'route_parser' => [
+                                     'configs' => [
+                                         'file' => __DIR__.'/routes.test.json'
+                                     ]
+                                 ],
+                                 'app_id' => 'XXX',
+                                 'api_token' => 'XXX'
+                             ]);
+        $this->assertTrue($client->getCommand('test') instanceof Command);
     }
 }
 

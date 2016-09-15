@@ -13,7 +13,7 @@ interface Client {
     function __construct($config);
 
     /**
-     * @param       $name
+     * @param string $name
      * @param array $args
      * @return Command
      */

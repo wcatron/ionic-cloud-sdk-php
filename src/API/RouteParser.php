@@ -17,20 +17,28 @@ class RouteParser implements \Ionic\API\Interfaces\RouteParser {
         $this->config = $config;
     }
 
-    function parse($routes = null) {
-        if (empty($routes)) {
-            // TODO: Determine if this should be checked in the constructor.
-            if (!empty($this->config['version']) && !empty($this->config['client'])) {
-                $routes = json_decode(file_get_contents(__DIR__.'/versions/'.$this->config['version'].'/'.$this->config['client'].'.api.json'), true)['routes'];
-            } else if (!empty($this->config['file'])) {
-                $routes = json_decode(file_get_contents($this->config['file']), true)['routes'];
-            } else {
-                throw new \InvalidArgumentException("`file` or `version` and `client` needed in route parser config.");
+    function parse($routes = []) {
+        if (!empty($this->config['file'])) {
+            $routes = self::getRouteFromFile($this->config['file'], $routes);
+        } else if (!empty($this->config['version']) && !empty($this->config['client'])) {
+            try {
+                $routes = self::getRouteFromFile(__DIR__.'/versions/'.$this->config['version'].'/'.$this->config['client'].'.api.json', $routes);
+            } catch (\OutOfBoundsException $e) {
+                throw new \Exception('Version '.$this->config['version'].' does not exist or client '.$this->config['client'].' is wrong.', 0, $e);
             }
+        } else if (empty($routes)) {
+            throw new \InvalidArgumentException("`file` or `version` and `client` needed in route parser config.");
         }
         return array_map(function ($route) {
             return $this->makeRoute($route);
         }, $routes);
+    }
+
+    static function getRouteFromFile($file, $routes = []) {
+        if (file_exists($file)) {
+            return array_merge(json_decode(file_get_contents($file), true)['routes'], $routes);
+        }
+        throw new \OutOfBoundsException('Route file does not exist.');
     }
 
     function makeRoute($route) {
