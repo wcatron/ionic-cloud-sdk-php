@@ -13,7 +13,15 @@ namespace Ionic\Push\Models;
  * @method NotificationConfig title(string $title)
  */
 class NotificationConfig {
-
+    
+    function __construct(array $array = null) {
+        if ($array) {
+            foreach ($array as $key => $value) {
+                $this->$key = $value;
+            }
+        }
+    }
+    
     const Properties = ['message', 'payload', 'title'];
 
     private $values = [];

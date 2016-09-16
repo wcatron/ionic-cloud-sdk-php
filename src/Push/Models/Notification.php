@@ -19,10 +19,19 @@ class Notification extends NotificationConfig {
     public $android;
 
     function __construct($array = []) {
-        $this->ios = new iOSNotificationConfig();
-        $this->android = new AndroidNotificationConfig();
         if (!empty($array)) {
-            // Map array to values.
+            $this->app_id = $array['app_id'];
+            $this->created = new \DateTime($array['created']);
+            $this->state = $array['state'];
+            $this->state = $array['status'];
+    
+            $this->ios = new iOSNotificationConfig($array['configs']['ios']);
+            $this->android = new iOSNotificationConfig($array['configs']['android']);
+            
+            parent::__construct($array['configs']);
+        } else {
+            $this->ios = new iOSNotificationConfig();
+            $this->android = new AndroidNotificationConfig();
         }
     }
 
