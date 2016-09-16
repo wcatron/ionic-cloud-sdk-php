@@ -4,7 +4,7 @@
 
 Setup your client.
 
-```
+```php
 $client = new PushClient(
             [
                 'api_token' => "<API_TOKEN>",
@@ -15,7 +15,7 @@ $client = new PushClient(
 
 Define your targets.
 
-```
+```php
 $targets = new Targets();
 foreach ($users as $user) {
     $targets->addExternalID($user->id);
@@ -27,7 +27,7 @@ $targets->addTokens(["TOKENA", "TOKENB"]);
 
 Create your notifications.
 
-```
+```php
 $notification = new Notification();
 $notification->title = "My Title";
 $notification->message = "Message for user...";
@@ -41,6 +41,6 @@ $notification->android->title("Android Only Title")->sound("android_beep.tiff")-
 
 Push your notifications.
 
-```
+```php
 $client->push($notification, $targets);
 ```
