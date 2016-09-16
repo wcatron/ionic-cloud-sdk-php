@@ -9,7 +9,8 @@ use Ionic\Push\Models\Targets;
 /**
  * Class PushClient
  * @package Ionic\Push
- * @method Notification push(Notification $notification, Targets $targets)
+ * @method Notification push(Notification $notification, Targets $targets, \DateTime $scheduled = false)
+ * @method
  */
 class PushClient extends Client {
     function getDefaults($config = [ ]) {
@@ -26,8 +27,11 @@ class PushClient extends Client {
         );
     }
 
-    function pushAsync(Notification $notification, Targets $targets) {
+    function pushAsync(Notification $notification, Targets $targets,\DateTime $scheduled = false) {
         $args = array_merge(["notification" => $notification->configs(), "profile" => $this->config['profile']], $targets->targets());
+        if ($scheduled) {
+            $args["scheduled"] = $scheduled->format('c');
+        }
         $this->getCommand('createNotification', $args)->resolve();
     }
 }

@@ -24,5 +24,11 @@ class PushClientTest extends PHPUnit_Framework_TestCase {
         $notification = $client->push($notification, $targets);
 
         $this->assertTrue($notification->state == "pending");
+
+        $date = new DateTime('now');
+        $date->add(DateInterval::createFromDateString('1 day'));
+        $notification = $client->push($notification, Targets::createSendToAll(), $date);
+
+        $this->assertTrue($notification->state == "scheduled");
     }
 }

@@ -16,6 +16,8 @@ use Ionic\Users\Models\User;
  * @method void addInstagramIDs(array $ids)
  */
 class Targets {
+    private $send_to_all = false;
+
     private $tokens = [];
     function addTokens($tokens) {
         $this->tokens = array_merge($this->tokens, $tokens);
@@ -69,7 +71,17 @@ class Targets {
         }
     }
 
+    static function createSendToAll() {
+        $targets = new Targets();
+        $targets->send_to_all = true;
+        return $targets;
+    }
+
     function targets() {
+        if ($this->send_to_all) {
+            return ["send_to_all" => true];
+        }
+
         $targets = [];
         if (!empty($this->tokens)) {
             $targets["tokens"] = $this->tokens;
