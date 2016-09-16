@@ -11,6 +11,7 @@
  *
  * Sample:
  * php swagger_parser.php 2.0.0-beta.0/auth/swagger.json 2.0.0-beta.0/users.api.json
+ * php swagger_parser.php 2.0.0-beta.0/push/swagger.json 2.0.0-beta.0/push.api.json
  *
  * TODO: This but better. Testing.
  */
@@ -39,10 +40,11 @@ $starting_output = json_decode(file_get_contents($output_file));
 $output = clone $starting_output;
 
 foreach($starting_output->routes as $route => $config) {
-    $request_uri = $config->http->request_uri;
+    $base_path = isset($swagger['basePath']) ? $swagger['basePath'] : '';
+    $request_uri = substr($config->http->request_uri, strlen($base_path));
     $method = $config->http->method;
     if (isset($swagger['paths'][$request_uri][$method])) {
-        $swagger_path = $swagger['paths'][$config->http->request_uri][$config->http->method];
+        $swagger_path = $swagger['paths'][$request_uri][$config->http->method];
     } else {
         $swagger_path = false;
     }
@@ -57,4 +59,4 @@ foreach($starting_output->routes as $route => $config) {
     }
 }
 
-file_put_contents($output_file, json_encode($output,JSON_UNESCAPED_SLASHES));
+file_put_contents($output_file, json_encode($output,JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));

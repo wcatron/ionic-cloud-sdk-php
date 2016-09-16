@@ -11,7 +11,7 @@ use Ionic\API\Interfaces\RouteParser;
  * @method mixed test()
  **/
 class Client implements \Ionic\Interfaces\Client {
-    private $config;
+    protected $config;
     /**
      * @var ClientInterface
      */

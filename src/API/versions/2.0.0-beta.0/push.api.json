@@ -1,0 +1,115 @@
+{
+    "routes": {
+        "createNotification": {
+            "http": {
+                "method": "post",
+                "request_uri": "/push/notifications"
+            },
+            "params": [
+                {
+                    "schema": {
+                        "$ref": "#/definitions/NotificationInput"
+                    },
+                    "name": "body",
+                    "in": "body",
+                    "required": true
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Push\\Models\\NotificationRecord"
+            }
+        },
+        "getTokens": {
+            "http": {
+                "method": "get",
+                "request_uri": "/push/tokens"
+            },
+            "params": [
+                {
+                    "name": "show_invalid",
+                    "in": "query",
+                    "type": "boolean"
+                },
+                {
+                    "in": "query",
+                    "name": "user_id",
+                    "format": "uuid",
+                    "type": "string"
+                },
+                {
+                    "format": "int32",
+                    "description": "Sets the number of items to return in paginated endpoints",
+                    "name": "page_size",
+                    "in": "query",
+                    "type": "integer",
+                    "required": false
+                },
+                {
+                    "format": "int32",
+                    "description": "Sets the page number for paginated endpoints",
+                    "name": "page",
+                    "in": "query",
+                    "type": "integer",
+                    "required": false
+                }
+            ],
+            "output": {
+                "array": "\\Ionic\\Push\\Models\\Token"
+            }
+        },
+        "createToken": {
+            "http": {
+                "method": "post",
+                "request_uri": "/push/tokens"
+            },
+            "params": [
+                {
+                    "schema": {
+                        "properties": {
+                            "app_id": {
+                                "type": "string"
+                            },
+                            "token": {
+                                "description": "Device Token",
+                                "type": "string"
+                            },
+                            "user_id": {
+                                "description": "User ID. Associate the token with the User.",
+                                "format": "uuid",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "required": [
+                            "token"
+                        ]
+                    },
+                    "name": "body",
+                    "in": "body",
+                    "required": false
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Push\\Models\\Token"
+            }
+        },
+        "getToken": {
+            "http": {
+                "method": "get",
+                "request_uri": "/push/tokens/{token_id}"
+            },
+            "params": [
+                {
+                    "description": "Token ID (MD5 Hash of the token)",
+                    "name": "token_id",
+                    "in": "path",
+                    "type": "string",
+                    "required": true
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Push\\Models\\Token"
+            }
+        }
+    }
+}
