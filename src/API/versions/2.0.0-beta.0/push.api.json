@@ -1,0 +1,23 @@
+{
+    "routes": {
+        "createNotification": {
+            "http": {
+                "method": "post",
+                "request_uri": "/notifications"
+            },
+            "params": [
+                {
+                    "schema": {
+                        "$ref": "#/definitions/NotificationInput"
+                    },
+                    "name": "body",
+                    "in": "body",
+                    "required": true
+                }
+            ],
+            "output": {
+                "object": "\\Ionic\\Push\\Models\\NotificationRecord"
+            }
+        }
+    }
+}
